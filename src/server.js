@@ -325,6 +325,13 @@ function submitAttempt(attempt, body, options = {}) {
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
+// 探活放在 session 之前，避免依赖会话与业务中间件（Render / 浏览器均可访问）
+function healthHandler(req, res) {
+  res.status(200).type("text/plain").send("ok");
+}
+app.get("/health", healthHandler);
+app.head("/health", healthHandler);
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: "1mb" }));
 app.use(session({ secret: process.env.SESSION_SECRET || "employee-handbook-exam-secret", resave: false, saveUninitialized: false }));
@@ -337,8 +344,6 @@ app.use((req, res, next) => {
   res.locals.year = new Date().getFullYear();
   next();
 });
-
-app.get("/health", (req, res) => res.status(200).type("text/plain").send("ok"));
 
 app.get("/", (req, res) => {
   if (!req.currentUser) return res.redirect("/login");
