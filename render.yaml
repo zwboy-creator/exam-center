@@ -5,13 +5,14 @@ services:
     name: employee-handbook-exam
     runtime: node
     plan: free
-    region: singapore
+    # 免费实例在 oregon 最稳妥；若你已在其他区创建过同名服务需先在控制台删旧服务再同步
+    region: oregon
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /health
     envVars:
       - key: NODE_VERSION
-        value: "22.12.0"
+        value: "22"
       - key: TRUST_PROXY
         value: "1"
       - key: DATABASE_URL

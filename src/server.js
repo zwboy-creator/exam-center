@@ -49,10 +49,22 @@ function save() {
 async function bootstrapDatabase() {
   const url = String(process.env.DATABASE_URL || "").trim();
   if (url) {
-    store = await initPostgresStore(url, LEGACY_JSON_PATH);
-  } else {
-    store = initSqliteStore(SQLITE_PATH, LEGACY_JSON_PATH);
+    const maxTry = 6;
+    let lastErr;
+    for (let i = 0; i < maxTry; i += 1) {
+      try {
+        store = await initPostgresStore(url, LEGACY_JSON_PATH);
+        db = store.db;
+        return;
+      } catch (e) {
+        lastErr = e;
+        console.error(`PostgreSQL 连接失败 (${i + 1}/${maxTry}):`, e.message || e);
+        await new Promise((r) => setTimeout(r, 4000));
+      }
+    }
+    throw lastErr;
   }
+  store = initSqliteStore(SQLITE_PATH, LEGACY_JSON_PATH);
   db = store.db;
 }
 
@@ -1015,8 +1027,8 @@ async function seedIfEmpty() {
 bootstrapDatabase()
   .then(() => seedIfEmpty())
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`员工手册学习考试平台已启动：http://localhost:${PORT}`);
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`员工手册学习考试平台已启动：端口 ${PORT}`);
       if (process.env.DATABASE_URL?.trim()) {
         console.log("数据存储：PostgreSQL（DATABASE_URL）");
       } else {
