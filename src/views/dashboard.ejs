@@ -1,0 +1,68 @@
+﻿<%- include('partials/header', { title: '我的学习考试' }) %>
+<div class="row g-3 mb-3">
+  <div class="col-md-8">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5>个人信息</h5>
+        <div class="row small text-secondary">
+          <div class="col-md-3">姓名：<strong><%= user.name %></strong></div>
+          <div class="col-md-3">手机号：<strong><%= user.phone %></strong></div>
+          <div class="col-md-3">门店：<strong><%= user.storeName %></strong></div>
+          <div class="col-md-3">岗位：<strong><%= user.positionName %></strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h6 class="mb-3">考试状态</h6>
+        <p class="small mb-2">时长：<%= settings.examDurationMinutes %> 分钟</p>
+        <p class="small mb-2">合格线：<%= settings.passScore %> 分</p>
+        <p class="small mb-3">最大次数：<%= maxAttempts %>（不合格可补考1次）</p>
+        <% if (inProgress) { %>
+          <a class="btn btn-warning" href="/exam/<%= inProgress.id %>">继续答题</a>
+        <% } else if (hasPassed) { %>
+          <button class="btn btn-success" disabled>已通过考试</button>
+        <% } else if (submittedCount >= maxAttempts) { %>
+          <button class="btn btn-secondary" disabled>已达考试次数上限</button>
+        <% } else { %>
+          <form method="post" action="/exam/start"><button class="btn btn-primary" type="submit"><%= submittedCount > 0 ? '开始补考' : '开始考试' %></button></form>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="mb-3">考试记录</h5>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead><tr><th>批次</th><th>类型</th><th>开始时间</th><th>提交时间</th><th>成绩</th><th>状态</th><th></th></tr></thead>
+        <tbody>
+          <% if (!attempts.length) { %><tr><td colspan="7" class="text-center text-secondary">暂无记录</td></tr><% } %>
+          <% attempts.forEach(a => { %>
+            <tr>
+              <td>#<%= a.attemptNo %></td>
+              <td><%= a.isMakeup ? '补考' : '初考' %></td>
+              <td><%= new Date(a.startedAt).toLocaleString('zh-CN') %></td>
+              <td><%= a.submittedAt ? new Date(a.submittedAt).toLocaleString('zh-CN') : '-' %></td>
+              <td><%= a.status === 'submitted' ? a.totalScore : '-' %></td>
+              <td>
+                <% if (a.status === 'in_progress') { %><span class="badge bg-warning text-dark">进行中</span><% } %>
+                <% if (a.status === 'submitted' && a.pass) { %><span class="badge bg-success">已通过</span><% } %>
+                <% if (a.status === 'submitted' && !a.pass) { %><span class="badge bg-danger">未通过</span><% } %>
+              </td>
+              <td>
+                <% if (a.status === 'in_progress') { %><a class="btn btn-sm btn-outline-warning" href="/exam/<%= a.id %>">继续</a><% } %>
+                <% if (a.status === 'submitted') { %><a class="btn btn-sm btn-outline-primary" href="/exam/<%= a.id %>/result">查看</a><% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<%- include('partials/footer') %>

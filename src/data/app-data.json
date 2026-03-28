@@ -1,0 +1,2039 @@
+{
+  "meta": {
+    "nextUserId": 3,
+    "nextAttemptId": 1,
+    "initializedAt": "2026-03-28T09:43:03.594Z",
+    "updatedAt": "2026-03-28T11:46:10.615Z"
+  },
+  "settings": {
+    "examDurationMinutes": 60,
+    "passScore": 80,
+    "maxAttempts": 2
+  },
+  "stores": [
+    {
+      "id": "M0000",
+      "name": "美嘉胜中台"
+    },
+    {
+      "id": "M0001",
+      "name": "广州店"
+    },
+    {
+      "id": "M0002",
+      "name": "上海店"
+    },
+    {
+      "id": "M0003",
+      "name": "连云港店"
+    },
+    {
+      "id": "M0004",
+      "name": "江门店"
+    },
+    {
+      "id": "M0005",
+      "name": "清远店"
+    },
+    {
+      "id": "M0006",
+      "name": "珠海店"
+    },
+    {
+      "id": "M0007",
+      "name": "揭阳店"
+    },
+    {
+      "id": "M0008",
+      "name": "马鞍山店"
+    },
+    {
+      "id": "M0009",
+      "name": "滁州店"
+    },
+    {
+      "id": "M0010",
+      "name": "兴义店"
+    },
+    {
+      "id": "M0011",
+      "name": "铜仁店"
+    },
+    {
+      "id": "M0012",
+      "name": "湖州店"
+    },
+    {
+      "id": "M0013",
+      "name": "诸暨店"
+    },
+    {
+      "id": "M0015",
+      "name": "海宁店"
+    },
+    {
+      "id": "M0016",
+      "name": "江阴店"
+    },
+    {
+      "id": "M0017",
+      "name": "张家港店"
+    },
+    {
+      "id": "M0018",
+      "name": "杭州店"
+    },
+    {
+      "id": "M0019",
+      "name": "韶关店"
+    }
+  ],
+  "departments": [
+    {
+      "id": 1,
+      "name": "服务部"
+    },
+    {
+      "id": 2,
+      "name": "配件部"
+    },
+    {
+      "id": 3,
+      "name": "维修部"
+    },
+    {
+      "id": 4,
+      "name": "综合部"
+    },
+    {
+      "id": 5,
+      "name": "总经办"
+    },
+    {
+      "id": 6,
+      "name": "美嘉胜中台"
+    }
+  ],
+  "positions": [
+    {
+      "id": 1,
+      "name": "中台管理人员",
+      "category": "management"
+    },
+    {
+      "id": 2,
+      "name": "服务店长",
+      "category": "management"
+    },
+    {
+      "id": 3,
+      "name": "技术主管",
+      "category": "management"
+    },
+    {
+      "id": 4,
+      "name": "配件主管",
+      "category": "spare_parts"
+    },
+    {
+      "id": 5,
+      "name": "综合管理员",
+      "category": "support"
+    },
+    {
+      "id": 6,
+      "name": "总经理",
+      "category": "management"
+    },
+    {
+      "id": 7,
+      "name": "服务主管",
+      "category": "service"
+    },
+    {
+      "id": 8,
+      "name": "服务体验专家",
+      "category": "service"
+    },
+    {
+      "id": 9,
+      "name": "事故服务顾问",
+      "category": "service"
+    },
+    {
+      "id": 10,
+      "name": "机电服务顾问",
+      "category": "service"
+    },
+    {
+      "id": 11,
+      "name": "前台引导员",
+      "category": "service"
+    },
+    {
+      "id": 12,
+      "name": "索赔专员",
+      "category": "spare_parts"
+    },
+    {
+      "id": 13,
+      "name": "用户服务",
+      "category": "service"
+    },
+    {
+      "id": 14,
+      "name": "机电工程师",
+      "category": "technical"
+    },
+    {
+      "id": 15,
+      "name": "喷漆工程师",
+      "category": "technical"
+    },
+    {
+      "id": 16,
+      "name": "钣金工程师",
+      "category": "technical"
+    },
+    {
+      "id": 17,
+      "name": "见习工程师",
+      "category": "technical"
+    },
+    {
+      "id": 18,
+      "name": "移动技师",
+      "category": "technical"
+    },
+    {
+      "id": 19,
+      "name": "质检",
+      "category": "technical"
+    },
+    {
+      "id": 20,
+      "name": "会计",
+      "category": "support"
+    },
+    {
+      "id": 21,
+      "name": "其他岗位",
+      "category": "universal"
+    },
+    {
+      "id": 22,
+      "name": "实习生",
+      "category": "universal"
+    },
+    {
+      "id": 23,
+      "name": "配件专员",
+      "category": "spare_parts"
+    },
+    {
+      "id": 24,
+      "name": "配件兼索赔员",
+      "category": "spare_parts"
+    },
+    {
+      "id": 25,
+      "name": "人资行政岗",
+      "category": "support"
+    }
+  ],
+  "storeDepartmentMap": {
+    "M0000": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0001": [
+      1
+    ],
+    "M0002": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0003": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0004": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0005": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0006": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0007": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0008": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0009": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0010": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0011": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0012": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0013": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0015": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0016": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0017": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0018": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "M0019": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  "departmentPositionMap": {
+    "1": [
+      8
+    ],
+    "2": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25
+    ],
+    "3": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25
+    ],
+    "4": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25
+    ],
+    "5": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25
+    ],
+    "6": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25
+    ]
+  },
+  "questions": [
+    {
+      "id": 1,
+      "category": "universal",
+      "questionType": "single",
+      "content": "美嘉胜是哪两家公司战略合作的产物？",
+      "options": [
+        "华为+小米",
+        "华胜+小米",
+        "华胜+蔚来",
+        "宝马+小米"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 2,
+      "category": "universal",
+      "questionType": "single",
+      "content": "华胜核心价值观是？",
+      "options": [
+        "诚信、专业、合作、进取",
+        "真诚、热爱、高效、创新",
+        "客户第一、员工第二",
+        "科学修车、透明服务"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 3,
+      "category": "universal",
+      "questionType": "single",
+      "content": "小米核心价值观是？",
+      "options": [
+        "真诚热爱",
+        "合作共赢",
+        "技术为本",
+        "效率优先"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 4,
+      "category": "universal",
+      "questionType": "single",
+      "content": "美嘉胜的发展目标是成为？",
+      "options": [
+        "小米汽车最佳战略服务商",
+        "全国最大维修连锁",
+        "豪华车专修第一品牌",
+        "新能源汽车制造商"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 5,
+      "category": "universal",
+      "questionType": "single",
+      "content": "员工考勤每天工作几小时？",
+      "options": [
+        "6小时",
+        "8小时",
+        "10小时",
+        "12小时"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 6,
+      "category": "universal",
+      "questionType": "single",
+      "content": "上下班打卡必须由谁操作？",
+      "options": [
+        "同事代打",
+        "本人亲自打卡",
+        "主管代打",
+        "无需打卡"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 7,
+      "category": "universal",
+      "questionType": "single",
+      "content": "月度迟到早退累计几次按旷工1次处理？",
+      "options": [
+        "2次",
+        "4次",
+        "6次",
+        "8次"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 8,
+      "category": "universal",
+      "questionType": "single",
+      "content": "连续旷工几天公司可解除劳动合同？",
+      "options": [
+        "1天",
+        "3天",
+        "5天",
+        "7天"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 9,
+      "category": "universal",
+      "questionType": "single",
+      "content": "工资发放日为每月几号？",
+      "options": [
+        "5号",
+        "15号",
+        "20号",
+        "月底"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 10,
+      "category": "universal",
+      "questionType": "single",
+      "content": "薪酬信息是否可以互相打听讨论？",
+      "options": [
+        "可以",
+        "私下可以",
+        "严禁",
+        "领导允许即可"
+      ],
+      "answer": "C",
+      "score": 2
+    },
+    {
+      "id": 11,
+      "category": "universal",
+      "questionType": "single",
+      "content": "小米服务三大铁律不包括？",
+      "options": [
+        "体验为先",
+        "质量为本",
+        "首问责任制",
+        "价格最低"
+      ],
+      "answer": "D",
+      "score": 2
+    },
+    {
+      "id": 12,
+      "category": "universal",
+      "questionType": "single",
+      "content": "美嘉胜高压线行为触碰后公司可？",
+      "options": [
+        "口头警告",
+        "解除合同不补偿",
+        "罚款",
+        "记过"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 13,
+      "category": "universal",
+      "questionType": "single",
+      "content": "员工信息虚假，公司可如何处理？",
+      "options": [
+        "批评教育",
+        "解除合同无补偿",
+        "降薪调岗",
+        "记录档案"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 14,
+      "category": "universal",
+      "questionType": "single",
+      "content": "车间作业是否可以吸烟？",
+      "options": [
+        "可以",
+        "休息区可以",
+        "严禁",
+        "领导不在可以"
+      ],
+      "answer": "C",
+      "score": 2
+    },
+    {
+      "id": 15,
+      "category": "universal",
+      "questionType": "single",
+      "content": "新员工试用期最长不超过几个月？",
+      "options": [
+        "3个月",
+        "6个月",
+        "9个月",
+        "12个月"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 16,
+      "category": "universal",
+      "questionType": "single",
+      "content": "员工年假按什么计算？",
+      "options": [
+        "工龄",
+        "岗位",
+        "业绩",
+        "入职月份"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 17,
+      "category": "universal",
+      "questionType": "single",
+      "content": "小米汽车服务要求全程做到哪“三透明”？",
+      "options": [
+        "过程、项目、价格",
+        "时间、人员、配件",
+        "成本、利润、工时",
+        "系统、流程、标准"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 18,
+      "category": "universal",
+      "questionType": "single",
+      "content": "首问责任制是指？",
+      "options": [
+        "谁接待谁负责闭环",
+        "店长负责到底",
+        "技术主管负责",
+        "客服负责"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 19,
+      "category": "universal",
+      "questionType": "single",
+      "content": "员工离职正式工需提前几天申请？",
+      "options": [
+        "3天",
+        "7天",
+        "30天",
+        "当天"
+      ],
+      "answer": "C",
+      "score": 2
+    },
+    {
+      "id": 20,
+      "category": "universal",
+      "questionType": "single",
+      "content": "手册与劳动合同效力关系是？",
+      "options": [
+        "手册高于合同",
+        "同等效力",
+        "合同高于手册",
+        "无关系"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 21,
+      "category": "universal",
+      "questionType": "multiple",
+      "content": "小米服务理念包括？",
+      "options": [
+        "真诚",
+        "智能",
+        "管家式专属服务",
+        "低价"
+      ],
+      "answer": "A,B,C",
+      "score": 2
+    },
+    {
+      "id": 22,
+      "category": "universal",
+      "questionType": "multiple",
+      "content": "华胜经营哲学“一个中心两个基本点”包括？",
+      "options": [
+        "建设优秀团队",
+        "企业文化",
+        "标准化管理",
+        "业绩第一"
+      ],
+      "answer": "A,B,C",
+      "score": 2
+    },
+    {
+      "id": 23,
+      "category": "universal",
+      "questionType": "multiple",
+      "content": "以下哪些属于美嘉胜高压线？",
+      "options": [
+        "职务侵占",
+        "飞单",
+        "泄露客户信息",
+        "迟到"
+      ],
+      "answer": "A,B,C",
+      "score": 2
+    },
+    {
+      "id": 24,
+      "category": "universal",
+      "questionType": "multiple",
+      "content": "安全生产要求包括？",
+      "options": [
+        "车间禁烟",
+        "规范用电",
+        "动火审批",
+        "佩戴护具"
+      ],
+      "answer": "A,B,C,D",
+      "score": 2
+    },
+    {
+      "id": 25,
+      "category": "universal",
+      "questionType": "multiple",
+      "content": "员工福利包括？",
+      "options": [
+        "带薪年假",
+        "社保",
+        "节日礼品",
+        "员工基金"
+      ],
+      "answer": "A,B,C,D",
+      "score": 2
+    },
+    {
+      "id": 26,
+      "category": "universal",
+      "questionType": "multiple",
+      "content": "以下哪些行为属于违纪？",
+      "options": [
+        "代打卡",
+        "上班玩手机",
+        "着装不规范",
+        "拒绝培训"
+      ],
+      "answer": "A,B,C,D",
+      "score": 2
+    },
+    {
+      "id": 27,
+      "category": "universal",
+      "questionType": "multiple",
+      "content": "小米汽车红线包括？",
+      "options": [
+        "恶意竞争",
+        "以次充好",
+        "泄露信息",
+        "扩损"
+      ],
+      "answer": "A,B,C,D",
+      "score": 2
+    },
+    {
+      "id": 28,
+      "category": "universal",
+      "questionType": "multiple",
+      "content": "员工职业发展双通道是？",
+      "options": [
+        "专业通道",
+        "管理通道",
+        "兼职通道",
+        "外包通道"
+      ],
+      "answer": "A,B",
+      "score": 2
+    },
+    {
+      "id": 29,
+      "category": "universal",
+      "questionType": "multiple",
+      "content": "试用期不合格情形包括？",
+      "options": [
+        "资料虚假",
+        "考核不达标",
+        "旷工",
+        "不服从安排"
+      ],
+      "answer": "A,B,C,D",
+      "score": 2
+    },
+    {
+      "id": 30,
+      "category": "universal",
+      "questionType": "multiple",
+      "content": "办公秩序要求包括？",
+      "options": [
+        "桌面整洁",
+        "下班关电源",
+        "禁止喧哗",
+        "禁止带小孩宠物"
+      ],
+      "answer": "A,B,C,D",
+      "score": 2
+    },
+    {
+      "id": 31,
+      "category": "management",
+      "questionType": "single",
+      "content": "门店培训第一责任人是？",
+      "options": [
+        "人事",
+        "店长",
+        "技师长",
+        "服务主管"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 32,
+      "category": "management",
+      "questionType": "single",
+      "content": "门店消防安全第一责任人是？",
+      "options": [
+        "店长",
+        "行政",
+        "保安",
+        "技术主管"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 33,
+      "category": "management",
+      "questionType": "single",
+      "content": "部门员工一月内多次违反办公秩序，负责人需？",
+      "options": [
+        "乐捐",
+        "口头警告",
+        "记过",
+        "降级"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 34,
+      "category": "management",
+      "questionType": "single",
+      "content": "员工不胜任工作，店长可依法？",
+      "options": [
+        "直接辞退",
+        "培训/调岗",
+        "降薪",
+        "罚款"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 35,
+      "category": "management",
+      "questionType": "single",
+      "content": "小米要求门店服务经理出现红线需？",
+      "options": [
+        "罚款",
+        "到总部述职",
+        "停岗",
+        "开除"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 36,
+      "category": "management",
+      "questionType": "single",
+      "content": "门店内训每月不少于几次？",
+      "options": [
+        "1次",
+        "2次",
+        "3次",
+        "4次"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 37,
+      "category": "management",
+      "questionType": "single",
+      "content": "聘任管理中，晋升需经过几个月试聘期？",
+      "options": [
+        "1个月",
+        "3个月",
+        "6个月",
+        "12个月"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 38,
+      "category": "management",
+      "questionType": "single",
+      "content": "客户重大投诉第一处置人是？",
+      "options": [
+        "店长",
+        "服务顾问",
+        "技术主管",
+        "人事"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 39,
+      "category": "management",
+      "questionType": "single",
+      "content": "门店数据造造假属于什么行为？",
+      "options": [
+        "警戒线",
+        "高压线",
+        "一般违纪",
+        "不处理"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 40,
+      "category": "management",
+      "questionType": "single",
+      "content": "员工手册确认书签署率要求达到？",
+      "options": [
+        "80%",
+        "90%",
+        "95%",
+        "100%"
+      ],
+      "answer": "D",
+      "score": 2
+    },
+    {
+      "id": 41,
+      "category": "management",
+      "questionType": "multiple",
+      "content": "店长管理职责包括？",
+      "options": [
+        "团队建设",
+        "合规运营",
+        "客户体验",
+        "安全管理"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 42,
+      "category": "management",
+      "questionType": "multiple",
+      "content": "以下属于店长红线责任的是？",
+      "options": [
+        "纵容造假",
+        "管理失职",
+        "包庇违纪",
+        "未组织培训"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 43,
+      "category": "management",
+      "questionType": "multiple",
+      "content": "门店人员任免流程包括？",
+      "options": [
+        "竞聘",
+        "测评",
+        "公示",
+        "试聘"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 44,
+      "category": "management",
+      "questionType": "multiple",
+      "content": "中台或门店组织述职的周期为？",
+      "options": [
+        "月度",
+        "季度",
+        "半年",
+        "年度"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 45,
+      "category": "management",
+      "questionType": "multiple",
+      "content": "门店监督检查内容包括？",
+      "options": [
+        "仪容仪表",
+        "考勤纪律",
+        "安全操作",
+        "服务规范"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 46,
+      "category": "service",
+      "questionType": "single",
+      "content": "服务岗对外微信昵称格式是？",
+      "options": [
+        "xiaomi|姓名(岗位)",
+        "随意起名",
+        "英文名",
+        "门店+姓名"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 47,
+      "category": "service",
+      "questionType": "single",
+      "content": "小米服务要求接待要做到？",
+      "options": [
+        "微笑、正视、专业",
+        "快速办完就行",
+        "能省则省",
+        "先忙自己事"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 48,
+      "category": "service",
+      "questionType": "single",
+      "content": "服务流程中“未完成提前关单”属于？",
+      "options": [
+        "警戒线",
+        "高压线",
+        "正常操作",
+        "允许偶尔"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 49,
+      "category": "service",
+      "questionType": "single",
+      "content": "客户投诉处理原则是？",
+      "options": [
+        "首问负责、一次闭环",
+        "推给店长",
+        "拖延处理",
+        "让客户找厂家"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 50,
+      "category": "service",
+      "questionType": "single",
+      "content": "服务岗禁止行为是？",
+      "options": [
+        "引导客户买外部产品",
+        "主动预约提醒保养",
+        "回访满意度",
+        "微笑服务"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 51,
+      "category": "service",
+      "questionType": "single",
+      "content": "前台仪容仪表要求工服必须？",
+      "options": [
+        "干净整洁、佩戴工牌",
+        "可穿便装",
+        "可混搭",
+        "随意"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 52,
+      "category": "service",
+      "questionType": "single",
+      "content": "客户信息是否可以外传？",
+      "options": [
+        "可以",
+        "严禁",
+        "熟人可以",
+        "领导同意可以"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 53,
+      "category": "service",
+      "questionType": "single",
+      "content": "服务报价必须？",
+      "options": [
+        "透明、准确",
+        "先低后高",
+        "随意报价",
+        "看人报价"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 54,
+      "category": "service",
+      "questionType": "single",
+      "content": "服务岗核心考核是？",
+      "options": [
+        "客户满意度",
+        "产值越高越好",
+        "加班时长",
+        "考勤"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 55,
+      "category": "service",
+      "questionType": "single",
+      "content": "遇到无法解答的问题应？",
+      "options": [
+        "随便回答",
+        "找人协助、及时反馈",
+        "不理客户",
+        "推脱"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 56,
+      "category": "service",
+      "questionType": "multiple",
+      "content": "小米服务三大铁律包括？",
+      "options": [
+        "体验为先",
+        "质量为本",
+        "首问责任制",
+        "快速响应"
+      ],
+      "answer": "A,B,C",
+      "score": 4
+    },
+    {
+      "id": 57,
+      "category": "service",
+      "questionType": "multiple",
+      "content": "服务岗仪容仪表规范包括？",
+      "options": [
+        "统一工服",
+        "佩戴工牌",
+        "长发束起",
+        "禁止夸张首饰"
+      ],
+      "answer": "A,B,C",
+      "score": 4
+    },
+    {
+      "id": 58,
+      "category": "service",
+      "questionType": "multiple",
+      "content": "服务沟通禁忌包括？",
+      "options": [
+        "敷衍客户",
+        "隐瞒信息",
+        "承诺做不到的事",
+        "耐心解答"
+      ],
+      "answer": "A,B,C",
+      "score": 4
+    },
+    {
+      "id": 59,
+      "category": "service",
+      "questionType": "multiple",
+      "content": "服务流程标准环节包括？",
+      "options": [
+        "预约",
+        "接车",
+        "沟通反馈",
+        "回访"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 60,
+      "category": "service",
+      "questionType": "multiple",
+      "content": "服务红线行为包括？",
+      "options": [
+        "态度恶劣",
+        "收费与实际不符",
+        "泄露客户信息",
+        "未按流程服务"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 61,
+      "category": "technical",
+      "questionType": "single",
+      "content": "维修必须使用什么配件？",
+      "options": [
+        "原厂新件",
+        "旧件",
+        "修复件",
+        "便宜件"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 62,
+      "category": "technical",
+      "questionType": "single",
+      "content": "拆装电池、电机必须遵守？",
+      "options": [
+        "小米安全作业规范",
+        "凭经验干",
+        "越快越好",
+        "不用防护"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 63,
+      "category": "technical",
+      "questionType": "single",
+      "content": "维修造成新损伤属于？",
+      "options": [
+        "服务红线",
+        "正常情况",
+        "不处理",
+        "客户承担"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 64,
+      "category": "technical",
+      "questionType": "single",
+      "content": "车间作业防护用品必须？",
+      "options": [
+        "正确佩戴",
+        "可戴可不戴",
+        "不用戴",
+        "天热不戴"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 65,
+      "category": "technical",
+      "questionType": "single",
+      "content": "科学修车核心是？",
+      "options": [
+        "按标准、按流程",
+        "凭感觉",
+        "怎么快怎么来",
+        "能修就修"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 66,
+      "category": "technical",
+      "questionType": "single",
+      "content": "技术岗认证证书中级有效期为？",
+      "options": [
+        "1年",
+        "3年",
+        "5年",
+        "长期"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 67,
+      "category": "technical",
+      "questionType": "single",
+      "content": "举升机、设备操作必须？",
+      "options": [
+        "持证/按规程",
+        "谁都可以操作",
+        "快速操作",
+        "不用检查"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 68,
+      "category": "technical",
+      "questionType": "single",
+      "content": "维修质量必须执行几级检验？",
+      "options": [
+        "一级",
+        "三级",
+        "不用检验",
+        "师傅说了算"
+      ],
+      "answer": "B",
+      "score": 2
+    },
+    {
+      "id": 69,
+      "category": "technical",
+      "questionType": "single",
+      "content": "发现他人用假件不上报属于？",
+      "options": [
+        "同犯",
+        "无关",
+        "警告",
+        "记过"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 70,
+      "category": "technical",
+      "questionType": "single",
+      "content": "动火作业（焊接）必须？",
+      "options": [
+        "申请审批、配灭火器",
+        "直接干",
+        "晚上干",
+        "周末干"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 71,
+      "category": "technical",
+      "questionType": "multiple",
+      "content": "技术岗安全生产要求包括？",
+      "options": [
+        "佩戴护目镜",
+        "绝缘手套",
+        "规范举升机使用",
+        "车间严禁烟火"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 72,
+      "category": "technical",
+      "questionType": "multiple",
+      "content": "以下哪些属于技术岗的高压线？",
+      "options": [
+        "偷换配件",
+        "私接私修",
+        "虚假检测",
+        "严重质量事故"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 73,
+      "category": "technical",
+      "questionType": "multiple",
+      "content": "车间5S管理包括？",
+      "options": [
+        "整理",
+        "整顿",
+        "清洁",
+        "素养"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 74,
+      "category": "technical",
+      "questionType": "multiple",
+      "content": "废旧物资处理要求？",
+      "options": [
+        "分类存放",
+        "按规处置",
+        "严禁私售",
+        "随处乱放"
+      ],
+      "answer": "A,B,C",
+      "score": 4
+    },
+    {
+      "id": 75,
+      "category": "technical",
+      "questionType": "multiple",
+      "content": "科学修车的三大要素？",
+      "options": [
+        "标准流程",
+        "专用工具",
+        "厂家技术支持",
+        "个人经验"
+      ],
+      "answer": "A,B,C",
+      "score": 4
+    },
+    {
+      "id": 76,
+      "category": "spare_parts",
+      "questionType": "single",
+      "content": "美嘉胜配件管理的核心原则是？",
+      "options": [
+        "准时、准确、合规",
+        "低价、大量、快速",
+        "随意、方便、简单",
+        "盈利第一"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 77,
+      "category": "spare_parts",
+      "questionType": "single",
+      "content": "索赔件必须保存多久后方可按规定处理？",
+      "options": [
+        "3个月",
+        "6个月",
+        "12个月",
+        "厂家规定周期"
+      ],
+      "answer": "D",
+      "score": 2
+    },
+    {
+      "id": 78,
+      "category": "spare_parts",
+      "questionType": "single",
+      "content": "发现配件实物与系统数据不符，应首先？",
+      "options": [
+        "直接修改系统",
+        "私下平账",
+        "查明原因并上报",
+        "不予理睬"
+      ],
+      "answer": "C",
+      "score": 2
+    },
+    {
+      "id": 79,
+      "category": "spare_parts",
+      "questionType": "single",
+      "content": "配件采购必须遵守？",
+      "options": [
+        "合规流程",
+        "私下交易",
+        "低价优先",
+        "人情采购"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 80,
+      "category": "spare_parts",
+      "questionType": "single",
+      "content": "索赔单提报必须？",
+      "options": [
+        "真实准确",
+        "夸大项目",
+        "虚假填报",
+        "随意提报"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 81,
+      "category": "spare_parts",
+      "questionType": "single",
+      "content": "小米限定出库配件是否可用于维修？",
+      "options": [
+        "严禁",
+        "可以",
+        "紧急情况可以",
+        "领导同意可以"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 82,
+      "category": "spare_parts",
+      "questionType": "single",
+      "content": "配件库存需定期？",
+      "options": [
+        "盘点核对",
+        "不管不问",
+        "随意调整",
+        "隐瞒差异"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 83,
+      "category": "spare_parts",
+      "questionType": "single",
+      "content": "配件专员核心职责是？",
+      "options": [
+        "合规管理、保障供应",
+        "成本最低",
+        "快速出库",
+        "随意调配"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 84,
+      "category": "spare_parts",
+      "questionType": "single",
+      "content": "旧件返厂包装要求？",
+      "options": [
+        "符合物流要求、标签清晰",
+        "随便包",
+        "不包",
+        "拆散包"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 85,
+      "category": "spare_parts",
+      "questionType": "single",
+      "content": "配件入库必须核对？",
+      "options": [
+        "单据与实物一致",
+        "只看数量",
+        "只看包装",
+        "无需核对"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 86,
+      "category": "spare_parts",
+      "questionType": "multiple",
+      "content": "配件管理核心要求包括？",
+      "options": [
+        "合规性",
+        "准确性",
+        "安全性",
+        "及时性"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 87,
+      "category": "spare_parts",
+      "questionType": "multiple",
+      "content": "索赔业务禁止行为包括？",
+      "options": [
+        "虚假保修",
+        "扩大项目",
+        "套件",
+        "以旧充新"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 88,
+      "category": "spare_parts",
+      "questionType": "multiple",
+      "content": "配件出入库流程包括？",
+      "options": [
+        "登记",
+        "核对",
+        "审批",
+        "存档"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 89,
+      "category": "spare_parts",
+      "questionType": "multiple",
+      "content": "配件专员需遵守的红线包括？",
+      "options": [
+        "以次充好",
+        "数据造假",
+        "私自外借",
+        "泄露信息"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 90,
+      "category": "spare_parts",
+      "questionType": "multiple",
+      "content": "旧件处理要求包括？",
+      "options": [
+        "按规定保管",
+        "如实登记",
+        "严禁私自售卖",
+        "配合厂家回收"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 91,
+      "category": "support",
+      "questionType": "single",
+      "content": "人事档案、薪酬信息属于？",
+      "options": [
+        "核心机密",
+        "公开资料",
+        "可分享信息",
+        "随处可见"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 92,
+      "category": "support",
+      "questionType": "single",
+      "content": "财务报销必须附带？",
+      "options": [
+        "合法发票",
+        "白条",
+        "手写说明",
+        "无需单据"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 93,
+      "category": "support",
+      "questionType": "single",
+      "content": "行政办公用品领用应？",
+      "options": [
+        "按需领取、登记",
+        "随意拿",
+        "多领存放",
+        "私自带走"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 94,
+      "category": "support",
+      "questionType": "single",
+      "content": "公司证照借用必须？",
+      "options": [
+        "办理借阅手续、限期归还",
+        "直接拿走",
+        "不用还",
+        "复印不用登记"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 95,
+      "category": "support",
+      "questionType": "single",
+      "content": "招聘面试中严禁？",
+      "options": [
+        "地域/性别歧视",
+        "询问专业",
+        "了解经历",
+        "测试能力"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 96,
+      "category": "support",
+      "questionType": "single",
+      "content": "费用支出必须遵循？",
+      "options": [
+        "先审批后执行",
+        "先干再说",
+        "自己说了算",
+        "无预算执行"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 97,
+      "category": "support",
+      "questionType": "single",
+      "content": "合同签署前必须经过？",
+      "options": [
+        "法务/领导审核",
+        "直接盖章",
+        "业务员自签",
+        "口头约定"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 98,
+      "category": "support",
+      "questionType": "single",
+      "content": "公章保管要求？",
+      "options": [
+        "专人保管、严禁私用",
+        "谁用谁拿",
+        "放在抽屉不锁",
+        "随身携带"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 99,
+      "category": "support",
+      "questionType": "single",
+      "content": "员工离职后系统账号应？",
+      "options": [
+        "立即停用",
+        "留着给别人用",
+        "不处理",
+        "延迟一个月"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 100,
+      "category": "support",
+      "questionType": "single",
+      "content": "职能部门的服务对象是？",
+      "options": [
+        "全公司员工及业务端",
+        "只有老板",
+        "只有上级",
+        "只有自己部门"
+      ],
+      "answer": "A",
+      "score": 2
+    },
+    {
+      "id": 101,
+      "category": "support",
+      "questionType": "multiple",
+      "content": "财务管理红线包括？",
+      "options": [
+        "侵占公款",
+        "虚假报账",
+        "私设小金库",
+        "挪用资金"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 102,
+      "category": "support",
+      "questionType": "multiple",
+      "content": "行政安全职责包括？",
+      "options": [
+        "用电安全",
+        "防盗安全",
+        "档案安全",
+        "网络安全"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 103,
+      "category": "support",
+      "questionType": "multiple",
+      "content": "人力资源合规要求？",
+      "options": [
+        "依法签合同",
+        "依法缴社保",
+        "严禁雇佣童工",
+        "保护员工隐私"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 104,
+      "category": "support",
+      "questionType": "multiple",
+      "content": "公文处理要求？",
+      "options": [
+        "及时",
+        "准确",
+        "保密",
+        "规范"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    },
+    {
+      "id": 105,
+      "category": "support",
+      "questionType": "multiple",
+      "content": "职能岗核心要求？",
+      "options": [
+        "专业性",
+        "原则性",
+        "服务意识",
+        "合规性"
+      ],
+      "answer": "A,B,C,D",
+      "score": 4
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "管理员",
+      "phone": "13900000001",
+      "passwordHash": "$2b$10$zM1o9BfLEDZ9Ip.sfI7Yz.dezJ.PTOgHAYnyGaaYfn/cKHKDN98YW",
+      "storeId": "M0001",
+      "departmentId": 1,
+      "positionId": 2,
+      "role": "admin",
+      "status": "active",
+      "loginFailures": 0,
+      "lockedUntil": null,
+      "createdAt": "2026-03-28T09:43:05.030Z",
+      "updatedAt": "2026-03-28T09:43:05.166Z"
+    },
+    {
+      "id": 2,
+      "name": "测试上海店长",
+      "phone": "13609783151",
+      "passwordHash": "$2b$10$F81JiD3bCIeQXkTdPTuid.j7TPPHDc5snhGZBbPR91HRwbw0YccUC",
+      "storeId": "M0002",
+      "departmentId": 5,
+      "positionId": 2,
+      "role": "employee",
+      "status": "active",
+      "loginFailures": 0,
+      "lockedUntil": null,
+      "createdAt": "2026-03-28T11:46:10.615Z",
+      "updatedAt": "2026-03-28T11:46:10.615Z"
+    }
+  ],
+  "attempts": [],
+  "logs": []
+}

@@ -1,0 +1,24 @@
+﻿<%- include('partials/header', { title: mode === 'create' ? '新增用户' : '编辑用户' }) %>
+<div class="row justify-content-center">
+  <div class="col-lg-9">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h4 class="mb-3"><%= mode === 'create' ? '新增用户' : `编辑用户 #${target.id}` %></h4>
+        <p class="text-secondary small">门店、部门、岗位为联动关联，范围由后台关联配置控制。</p>
+        <form id="adminUserForm" method="post" action="<%= mode === 'create' ? '/admin/users/new' : `/admin/users/${target.id}/edit` %>" class="row g-3">
+          <div class="col-md-6"><label class="form-label">姓名</label><input class="form-control" name="name" value="<%= target?.name || '' %>" required /></div>
+          <div class="col-md-6"><label class="form-label">手机号（登录ID）</label><input class="form-control" name="phone" value="<%= target?.phone || '' %>" required /></div>
+          <div class="col-md-6"><label class="form-label"><%= mode === 'create' ? '密码' : '重置密码（留空不修改）' %></label><input class="form-control" name="password" type="password" <%= mode === 'create' ? 'required' : '' %> /></div>
+          <div class="col-md-6"><label class="form-label">角色</label><select class="form-select" name="role"><% roleOptions.forEach(r => { %><option value="<%= r %>" <%= target?.role === r ? 'selected' : '' %>><%= r %></option><% }) %></select></div>
+          <div class="col-md-4"><label class="form-label">门店</label><select class="form-select" name="storeId" required><option value="">请选择门店</option><% stores.forEach(s => { %><option value="<%= s.id %>" <%= String(target?.storeId || '') === String(s.id) ? 'selected' : '' %>><%= s.name %></option><% }) %></select></div>
+          <div class="col-md-4"><label class="form-label">部门</label><select class="form-select" name="departmentId" required><option value="">请选择部门</option><% departments.forEach(d => { %><option value="<%= d.id %>" <%= String(target?.departmentId || '') === String(d.id) ? 'selected' : '' %>><%= d.name %></option><% }) %></select></div>
+          <div class="col-md-4"><label class="form-label">岗位</label><select class="form-select" name="positionId" required><option value="">请选择岗位</option><% positions.forEach(p => { %><option value="<%= p.id %>" <%= String(target?.positionId || '') === String(p.id) ? 'selected' : '' %>><%= p.name %></option><% }) %></select></div>
+          <div class="col-md-3"><label class="form-label">状态</label><select class="form-select" name="status"><% statusOptions.forEach(s => { %><option value="<%= s %>" <%= (target?.status || 'active') === s ? 'selected' : '' %>><%= s %></option><% }) %></select></div>
+          <div class="col-12 d-flex gap-2"><button class="btn btn-primary" type="submit">保存</button><a class="btn btn-outline-secondary" href="/admin/users">返回</a></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('partials/user-linkage-script', { formId: 'adminUserForm', relations, departments, positions }) %>
+<%- include('partials/footer') %>

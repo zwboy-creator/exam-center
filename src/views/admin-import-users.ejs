@@ -1,0 +1,35 @@
+﻿<%- include('partials/header', { title: '批量导入用户' }) %>
+<div class="row g-3">
+  <div class="col-lg-7">
+    <div class="card"><div class="card-body">
+      <h5 class="mb-3">批量导入用户（CSV）</h5>
+      <form method="post" action="/admin/users/import" enctype="multipart/form-data" class="vstack gap-3">
+        <input class="form-control" type="file" name="file" accept=".csv" required />
+        <button class="btn btn-primary" type="submit">上传并导入</button>
+      </form>
+      <p class="small text-secondary mt-3 mb-0">支持列名：name/姓名，phone/手机号，门店，部门，岗位，role，status，password。</p>
+    </div></div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card"><div class="card-body">
+      <h6>CSV示例</h6>
+      <pre class="small">name,phone,门店,部门,岗位,role,password
+张三,13800001111,广州店,服务部,服务体验专家,employee,123456
+李四,13800002222,上海店,维修部,机电工程师,manager,654321</pre>
+      <p class="small text-secondary mb-0">不填password时，默认使用手机号后6位。</p>
+    </div></div>
+  </div>
+</div>
+
+<% if (result) { %>
+<div class="card mt-3">
+  <div class="card-body">
+    <h6>最近一次导入结果</h6>
+    <p class="mb-2">总行数：<%= result.total %>，新增：<%= result.created %>，更新：<%= result.updated %>，失败：<%= result.failed %></p>
+    <% if (result.errors && result.errors.length) { %>
+      <div class="alert alert-warning mb-0"><% result.errors.forEach(e => { %><div><%= e %></div><% }) %></div>
+    <% } %>
+  </div>
+</div>
+<% } %>
+<%- include('partials/footer') %>

@@ -1,0 +1,85 @@
+﻿<script>
+  (function () {
+    const form = document.getElementById('<%= formId %>');
+    if (!form) return;
+
+    const storeSelect = form.querySelector('select[name="storeId"]');
+    const departmentSelect = form.querySelector('select[name="departmentId"]');
+    const positionSelect = form.querySelector('select[name="positionId"]');
+    if (!storeSelect || !departmentSelect || !positionSelect) return;
+
+    const relations = <%- JSON.stringify(relations || { storeDepartmentMap: {}, departmentPositionMap: {} }) %>;
+    const departments = <%- JSON.stringify(departments || []) %>;
+    const positions = <%- JSON.stringify(positions || []) %>;
+
+    function normalizeNumArray(arr) {
+      return (Array.isArray(arr) ? arr : []).map((x) => Number(x)).filter((x) => Number.isInteger(x));
+    }
+
+    function getAllowedDepartmentIds(storeId) {
+      const all = departments.map((d) => Number(d.id));
+      if (!storeId) return [];
+      const map = relations.storeDepartmentMap || {};
+      const ids = normalizeNumArray(map[String(storeId)]);
+      return ids.length ? ids : all;
+    }
+
+    function getAllowedPositionIds(departmentId) {
+      const all = positions.map((p) => Number(p.id));
+      if (!departmentId) return [];
+      const map = relations.departmentPositionMap || {};
+      const ids = normalizeNumArray(map[String(departmentId)]);
+      return ids.length ? ids : all;
+    }
+
+    function rebuildSelect(selectEl, rows, selectedValue, placeholder) {
+      const oldValue = String(selectedValue || '');
+      selectEl.innerHTML = '';
+
+      const first = document.createElement('option');
+      first.value = '';
+      first.textContent = placeholder;
+      selectEl.appendChild(first);
+
+      rows.forEach((row) => {
+        const option = document.createElement('option');
+        option.value = String(row.id);
+        option.textContent = row.name;
+        if (String(row.id) === oldValue) option.selected = true;
+        selectEl.appendChild(option);
+      });
+
+      if (!rows.some((row) => String(row.id) === oldValue)) {
+        selectEl.value = '';
+      }
+    }
+
+    function refreshDepartments(selectedDepartmentId) {
+      const allowedIds = getAllowedDepartmentIds(storeSelect.value);
+      const allowedSet = new Set(allowedIds.map((x) => Number(x)));
+      const rows = departments.filter((d) => allowedSet.has(Number(d.id)));
+      rebuildSelect(departmentSelect, rows, selectedDepartmentId, '请选择部门');
+    }
+
+    function refreshPositions(selectedPositionId) {
+      const allowedIds = getAllowedPositionIds(departmentSelect.value);
+      const allowedSet = new Set(allowedIds.map((x) => Number(x)));
+      const rows = positions.filter((p) => allowedSet.has(Number(p.id)));
+      rebuildSelect(positionSelect, rows, selectedPositionId, '请选择岗位');
+    }
+
+    const initDepartmentId = departmentSelect.value;
+    const initPositionId = positionSelect.value;
+    refreshDepartments(initDepartmentId);
+    refreshPositions(initPositionId);
+
+    storeSelect.addEventListener('change', () => {
+      refreshDepartments('');
+      refreshPositions('');
+    });
+
+    departmentSelect.addEventListener('change', () => {
+      refreshPositions('');
+    });
+  })();
+</script>

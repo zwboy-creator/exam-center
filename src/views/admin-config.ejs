@@ -1,0 +1,153 @@
+﻿<%- include('partials/header', { title: '基础配置' }) %>
+<div class="row g-3 mb-3">
+  <div class="col-lg-4">
+    <div class="card"><div class="card-body">
+      <h6>新增门店</h6>
+      <form method="post" action="/admin/config/store" class="vstack gap-2">
+        <input class="form-control" name="id" placeholder="门店编码，如 M0099" required />
+        <input class="form-control" name="name" placeholder="门店名称" required />
+        <button class="btn btn-primary btn-sm" type="submit">新增门店</button>
+      </form>
+      <hr />
+      <div class="small list-scroll"><% stores.forEach(s => { %><div><%= s.id %> - <%= s.name %></div><% }) %></div>
+    </div></div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card"><div class="card-body">
+      <h6>新增部门</h6>
+      <form method="post" action="/admin/config/department" class="vstack gap-2">
+        <input class="form-control" name="id" placeholder="部门编码（可留空自动）" />
+        <input class="form-control" name="name" placeholder="部门名称" required />
+        <button class="btn btn-primary btn-sm" type="submit">新增部门</button>
+      </form>
+      <hr />
+      <div class="small list-scroll"><% departments.forEach(d => { %><div><%= d.id %> - <%= d.name %></div><% }) %></div>
+    </div></div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card"><div class="card-body">
+      <h6>新增岗位</h6>
+      <form method="post" action="/admin/config/position" class="vstack gap-2">
+        <input class="form-control" name="id" placeholder="岗位编码（可留空自动）" />
+        <input class="form-control" name="name" placeholder="岗位名称" required />
+        <select class="form-select" name="category" required>
+          <option value="">选择题库分类</option>
+          <% categories.forEach(c => { %><option value="<%= c %>"><%= c %></option><% }) %>
+        </select>
+        <button class="btn btn-primary btn-sm" type="submit">新增岗位</button>
+      </form>
+      <hr />
+      <div class="small list-scroll"><% positions.forEach(p => { %><div><%= p.id %> - <%= p.name %> (<%= p.category %>)</div><% }) %></div>
+    </div></div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card"><div class="card-body">
+      <h6>关联配置：门店 → 部门</h6>
+      <p class="text-secondary small">选择门店后勾选可用部门，注册与后台建档会按该规则自动联动。</p>
+      <form id="storeDepartmentLinkForm" method="post" action="/admin/config/store-department-link" class="vstack gap-2">
+        <label class="form-label mb-0">门店</label>
+        <select class="form-select" id="linkStoreId" name="storeId" required>
+          <option value="">请选择门店</option>
+          <% stores.forEach(s => { %>
+            <option value="<%= s.id %>"><%= s.name %></option>
+          <% }) %>
+        </select>
+
+        <label class="form-label mb-0 mt-1">可用部门（可多选）</label>
+        <select class="form-select" id="linkDepartmentIds" name="departmentIds" multiple size="10" required>
+          <% departments.forEach(d => { %>
+            <option value="<%= d.id %>"><%= d.name %></option>
+          <% }) %>
+        </select>
+        <div class="small text-secondary">Windows 可按住 Ctrl 进行多选。</div>
+
+        <button class="btn btn-primary btn-sm" type="submit">保存门店-部门关联</button>
+      </form>
+    </div></div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card"><div class="card-body">
+      <h6>关联配置：部门 → 岗位</h6>
+      <p class="text-secondary small">选择部门后勾选可用岗位，注册与后台建档会按该规则自动联动。</p>
+      <form id="departmentPositionLinkForm" method="post" action="/admin/config/department-position-link" class="vstack gap-2">
+        <label class="form-label mb-0">部门</label>
+        <select class="form-select" id="linkDepartmentId" name="departmentId" required>
+          <option value="">请选择部门</option>
+          <% departments.forEach(d => { %>
+            <option value="<%= d.id %>"><%= d.name %></option>
+          <% }) %>
+        </select>
+
+        <label class="form-label mb-0 mt-1">可用岗位（可多选）</label>
+        <select class="form-select" id="linkPositionIds" name="positionIds" multiple size="10" required>
+          <% positions.forEach(p => { %>
+            <option value="<%= p.id %>"><%= p.name %></option>
+          <% }) %>
+        </select>
+        <div class="small text-secondary">Windows 可按住 Ctrl 进行多选。</div>
+
+        <button class="btn btn-primary btn-sm" type="submit">保存部门-岗位关联</button>
+      </form>
+    </div></div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const relations = <%- JSON.stringify(relations || { storeDepartmentMap: {}, departmentPositionMap: {} }) %>;
+
+    const storeSelect = document.getElementById('linkStoreId');
+    const departmentMulti = document.getElementById('linkDepartmentIds');
+    const departmentSelect = document.getElementById('linkDepartmentId');
+    const positionMulti = document.getElementById('linkPositionIds');
+
+    function normalizeNumArray(arr) {
+      return (Array.isArray(arr) ? arr : []).map((x) => Number(x)).filter((x) => Number.isInteger(x));
+    }
+
+    function applyMultiSelection(selectEl, idList) {
+      const set = new Set(idList.map((x) => Number(x)));
+      Array.from(selectEl.options).forEach((op) => {
+        op.selected = set.has(Number(op.value));
+      });
+    }
+
+    function loadStoreDepartment() {
+      if (!storeSelect.value) {
+        Array.from(departmentMulti.options).forEach((op) => { op.selected = false; });
+        return;
+      }
+      const ids = normalizeNumArray((relations.storeDepartmentMap || {})[String(storeSelect.value)]);
+      applyMultiSelection(departmentMulti, ids);
+    }
+
+    function loadDepartmentPosition() {
+      if (!departmentSelect.value) {
+        Array.from(positionMulti.options).forEach((op) => { op.selected = false; });
+        return;
+      }
+      const ids = normalizeNumArray((relations.departmentPositionMap || {})[String(departmentSelect.value)]);
+      applyMultiSelection(positionMulti, ids);
+    }
+
+    if (storeSelect) {
+      if (storeSelect.options.length > 1) storeSelect.selectedIndex = 1;
+      loadStoreDepartment();
+      storeSelect.addEventListener('change', loadStoreDepartment);
+    }
+
+    if (departmentSelect) {
+      if (departmentSelect.options.length > 1) departmentSelect.selectedIndex = 1;
+      loadDepartmentPosition();
+      departmentSelect.addEventListener('change', loadDepartmentPosition);
+    }
+  })();
+</script>
+
+<%- include('partials/footer') %>

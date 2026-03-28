@@ -1,0 +1,68 @@
+﻿<%- include('partials/header', { title: '门店学习考试统计' }) %>
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h4 class="mb-0"><%= isManager ? '本门店学习考试统计' : '全门店学习考试统计' %></h4>
+  <a
+    class="btn btn-outline-success btn-sm"
+    href="/reports/stores/export?storeId=<%= encodeURIComponent(filters.storeId || 'all') %>&positionId=<%= encodeURIComponent(filters.positionId || 'all') %>&batch=<%= encodeURIComponent(filters.batch || 'all') %>"
+  >
+    导出 Excel
+  </a>
+</div>
+
+<form method="get" action="/reports/stores" class="card mb-3">
+  <div class="card-body row g-2 align-items-end">
+    <div class="col-md-3">
+      <label class="form-label">门店</label>
+      <select class="form-select" name="storeId" <%= isManager ? 'disabled' : '' %>>
+        <% if (!isManager) { %><option value="all" <%= filters.storeId === 'all' ? 'selected' : '' %>>全部门店</option><% } %>
+        <% stores.forEach(s => { %>
+          <option value="<%= s.id %>" <%= String(filters.storeId) === String(s.id) ? 'selected' : '' %>><%= s.name %></option>
+        <% }) %>
+      </select>
+      <% if (isManager) { %><input type="hidden" name="storeId" value="<%= filters.storeId %>" /><% } %>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">岗位</label>
+      <select class="form-select" name="positionId">
+        <option value="all" <%= filters.positionId === 'all' ? 'selected' : '' %>>全部岗位</option>
+        <% positions.forEach(p => { %>
+          <option value="<%= p.id %>" <%= String(filters.positionId) === String(p.id) ? 'selected' : '' %>><%= p.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">考试批次</label>
+      <select class="form-select" name="batch">
+        <option value="all" <%= filters.batch === 'all' ? 'selected' : '' %>>全部批次</option>
+        <% batchOptions.forEach(b => { %>
+          <option value="<%= b %>" <%= String(filters.batch) === String(b) ? 'selected' : '' %>>第<%= b %>次</option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+      <button class="btn btn-primary" type="submit">筛选</button>
+      <a class="btn btn-outline-secondary" href="/reports/stores">重置</a>
+    </div>
+  </div>
+</form>
+
+<div class="table-responsive">
+  <table class="table table-bordered align-middle">
+    <thead><tr><th>门店</th><th>注册人数</th><th>参与人数</th><th>通过人数</th><th>参与率</th><th>通过率</th><th>平均分</th></tr></thead>
+    <tbody>
+      <% if (!rows.length) { %><tr><td colspan="7" class="text-center text-secondary">暂无数据</td></tr><% } %>
+      <% rows.forEach(r => { %>
+        <tr>
+          <td><%= r.storeName %></td>
+          <td><%= r.registeredCount %></td>
+          <td><%= r.participantCount %></td>
+          <td><%= r.passCount %></td>
+          <td><%= r.participationRate.toFixed(2) %>%</td>
+          <td><%= r.passRate.toFixed(2) %>%</td>
+          <td><%= r.averageScore.toFixed(2) %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('partials/footer') %>

@@ -1,0 +1,25 @@
+{
+  "name": "employee-handbook-exam",
+  "version": "1.0.0",
+  "description": "Employee handbook learning and exam platform",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "pg": "^8.14.1",
+    "bcryptjs": "^3.0.3",
+    "csv-parse": "^6.2.1",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "iconv-lite": "^0.7.0",
+    "multer": "^2.1.1",
+    "xlsx": "^0.18.5"
+  }
+}

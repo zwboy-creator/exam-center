@@ -1,0 +1,23 @@
+﻿<%- include('partials/header', { title: '员工注册' }) %>
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h4 class="mb-3">员工注册</h4>
+        <p class="text-secondary small">登录ID使用手机号。系统将按门店→部门→岗位关联规则自动联动可选项。</p>
+        <form id="registerForm" method="post" action="/register" class="row g-3">
+          <div class="col-md-6"><label class="form-label">姓名</label><input class="form-control" name="name" required /></div>
+          <div class="col-md-6"><label class="form-label">手机号（登录ID）</label><input class="form-control" name="phone" required /></div>
+          <div class="col-md-6"><label class="form-label">密码</label><input class="form-control" name="password" type="password" required /></div>
+          <div class="col-md-6"><label class="form-label">确认密码</label><input class="form-control" name="passwordConfirm" type="password" required /></div>
+          <div class="col-md-4"><label class="form-label">所在门店</label><select class="form-select" name="storeId" required><option value="">请选择门店</option><% stores.forEach(s => { %><option value="<%= s.id %>"><%= s.name %></option><% }) %></select></div>
+          <div class="col-md-4"><label class="form-label">部门</label><select class="form-select" name="departmentId" required><option value="">请选择部门</option><% departments.forEach(d => { %><option value="<%= d.id %>"><%= d.name %></option><% }) %></select></div>
+          <div class="col-md-4"><label class="form-label">岗位</label><select class="form-select" name="positionId" required><option value="">请选择岗位</option><% positions.forEach(p => { %><option value="<%= p.id %>"><%= p.name %></option><% }) %></select></div>
+          <div class="col-12 d-flex gap-2"><button class="btn btn-primary" type="submit">提交注册</button><a class="btn btn-outline-secondary" href="/login">返回登录</a></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('partials/user-linkage-script', { formId: 'registerForm', relations, departments, positions }) %>
+<%- include('partials/footer') %>

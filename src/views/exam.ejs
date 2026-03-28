@@ -1,0 +1,394 @@
+﻿<%- include('partials/header', { title: '在线答题' }) %>
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <div class="me-3">
+    <h5 class="mb-1">在线考试（第<%= attempt.attemptNo %>次）<%= attempt.isMakeup ? ' - 补考' : '' %></h5>
+    <div class="small text-secondary">题量：<%= attempt.questions.length %> 题，满分100分，支持答题卡跳题与标记</div>
+  </div>
+  <div class="text-end exam-meta">
+    <div class="small text-secondary">剩余时间</div>
+    <div id="timer" class="fs-4 fw-bold text-danger">--:--</div>
+  </div>
+</div>
+
+<form method="post" action="/exam/<%= attempt.id %>/submit" id="examForm" data-attempt-id="<%= attempt.id %>">
+  <input type="hidden" id="forceCheatSubmit" name="forceCheatSubmit" value="0" />
+  <input type="hidden" id="cheatViolationCount" name="cheatViolationCount" value="0" />
+  <input type="hidden" id="cheatEventsJson" name="cheatEventsJson" value="" />
+
+  <div class="alert alert-warning small mb-3">
+    闭卷考试提醒：禁止切换页面、复制或粘贴。系统最多记录3次违规，第3次将自动交卷并按作弊处理（本次成绩记 0 分）。
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-9">
+      <% attempt.questions.forEach((q, idx) => { %>
+        <section
+          class="card mb-3 question-block"
+          id="question-<%= q.questionId %>"
+          data-question-id="<%= q.questionId %>"
+          data-question-order="<%= idx + 1 %>"
+        >
+          <div class="card-body">
+            <div class="d-flex justify-content-between gap-2 flex-wrap">
+              <h6 class="mb-1"><%= idx + 1 %>. <%= q.content %></h6>
+              <div class="d-flex gap-2 align-items-center">
+                <span class="badge text-bg-secondary"><%= q.questionType === 'single' ? '单选' : '多选' %> / <%= q.score %>分</span>
+                <button
+                  class="btn btn-sm btn-outline-warning mark-btn"
+                  type="button"
+                  data-mark-btn
+                  data-question-id="<%= q.questionId %>"
+                >
+                  标记
+                </button>
+              </div>
+            </div>
+            <div class="mt-2 vstack gap-2">
+              <% const selectedValues = String(q.selectedAnswer || '').split(',').map(x => x.trim().toUpperCase()).filter(Boolean); %>
+              <% q.options.forEach((op, i) => { const letter = String.fromCharCode(65 + i); %>
+                <label class="option-item">
+                  <% if (q.questionType === 'single') { %>
+                    <input type="radio" name="q_<%= q.questionId %>" value="<%= letter %>" <%= selectedValues.includes(letter) ? 'checked' : '' %> />
+                  <% } else { %>
+                    <input type="checkbox" name="q_<%= q.questionId %>" value="<%= letter %>" <%= selectedValues.includes(letter) ? 'checked' : '' %> />
+                  <% } %>
+                  <span><%= letter %>. <%= op %></span>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+      <% }) %>
+      <div class="sticky-submit py-3 bg-white border-top d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="small text-secondary">
+          当前题号：<strong id="currentQuestionDisplay">1/<%= attempt.questions.length %></strong>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-secondary" id="prevQuestionBtn" type="button">上一题</button>
+          <button class="btn btn-outline-secondary" id="nextQuestionBtn" type="button">下一题</button>
+          <button class="btn btn-primary btn-lg" type="submit" onclick="return confirm('确认提交试卷？提交后不可修改。')">提交试卷</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3">
+      <aside class="card answer-card">
+        <div class="card-body">
+          <h6 class="mb-2">答题卡</h6>
+          <div class="small mb-2">
+            已答 <strong id="answeredCount">0</strong> / <%= attempt.questions.length %><br />
+            未答 <strong id="unansweredCount"><%= attempt.questions.length %></strong>，已标记 <strong id="markedCount">0</strong>
+          </div>
+
+          <div class="btn-group btn-group-sm w-100 mb-2" role="group" aria-label="答题筛选">
+            <button class="btn btn-outline-secondary active" type="button" data-filter-btn data-filter="all">全部</button>
+            <button class="btn btn-outline-secondary" type="button" data-filter-btn data-filter="unanswered">未答</button>
+            <button class="btn btn-outline-secondary" type="button" data-filter-btn data-filter="marked">标记</button>
+          </div>
+
+          <div class="answer-grid mb-2">
+            <% attempt.questions.forEach((q, idx) => { %>
+              <a
+                href="#question-<%= q.questionId %>"
+                class="answer-cell state-unanswered"
+                data-answer-cell
+                data-question-id="<%= q.questionId %>"
+                title="第<%= idx + 1 %>题"
+              >
+                <%= idx + 1 %>
+              </a>
+            <% }) %>
+          </div>
+
+          <div class="small text-secondary">
+            <span class="legend-item"><span class="legend-dot legend-unanswered"></span> 未答</span>
+            <span class="legend-item"><span class="legend-dot legend-answered"></span> 已答</span>
+            <span class="legend-item"><span class="legend-dot legend-marked"></span> 已标记</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</form>
+
+<script>
+  const end = new Date('<%= deadlineIso %>').getTime();
+  const timerEl = document.getElementById('timer');
+  const formEl = document.getElementById('examForm');
+  const attemptId = formEl.dataset.attemptId;
+  const progressUrl = `/exam/${attemptId}/progress`;
+  const serverMarkedQuestionIds = <%- JSON.stringify(attempt.markedQuestionIds || []) %>;
+  const questionEls = Array.from(document.querySelectorAll('[data-question-id]')).filter((el) => el.id && el.id.startsWith('question-'));
+  const markBtns = Array.from(document.querySelectorAll('[data-mark-btn]'));
+  const answeredCountEl = document.getElementById('answeredCount');
+  const unansweredCountEl = document.getElementById('unansweredCount');
+  const markedCountEl = document.getElementById('markedCount');
+  const filterBtns = Array.from(document.querySelectorAll('[data-filter-btn]'));
+  const answerCells = Array.from(document.querySelectorAll('[data-answer-cell]'));
+  const prevQuestionBtn = document.getElementById('prevQuestionBtn');
+  const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+  const currentQuestionDisplayEl = document.getElementById('currentQuestionDisplay');
+  const forceCheatSubmitEl = document.getElementById('forceCheatSubmit');
+  const cheatViolationCountEl = document.getElementById('cheatViolationCount');
+  const cheatEventsJsonEl = document.getElementById('cheatEventsJson');
+
+  let markedMap = {};
+  let currentFilter = 'all';
+  let cheatViolationCount = 0;
+  let isSubmitting = false;
+  let saveTimer = null;
+  let saveInFlight = false;
+  let queuedSave = false;
+  let currentQuestionId = questionEls.length ? String(questionEls[0].dataset.questionId) : null;
+  const MAX_CHEAT_VIOLATIONS = 3;
+  const cheatEvents = [];
+  serverMarkedQuestionIds.forEach((qid) => { markedMap[String(qid)] = true; });
+
+  function isAnswered(questionId) {
+    return !!document.querySelector(`input[name="q_${questionId}"]:checked`);
+  }
+
+  function isMarked(questionId) {
+    return !!markedMap[String(questionId)];
+  }
+
+  function updateQuestionState(questionId) {
+    const qid = String(questionId);
+    const blockEl = document.getElementById(`question-${qid}`);
+    const cardEl = document.querySelector(`[data-answer-cell][data-question-id="${qid}"]`);
+    const markBtnEl = document.querySelector(`[data-mark-btn][data-question-id="${qid}"]`);
+
+    if (!blockEl || !cardEl || !markBtnEl) return;
+
+    const answered = isAnswered(qid);
+    const marked = isMarked(qid);
+
+    blockEl.classList.toggle('question-marked', marked);
+    cardEl.classList.remove('state-answered', 'state-unanswered', 'state-marked');
+    cardEl.classList.add(answered ? 'state-answered' : 'state-unanswered');
+    if (marked) cardEl.classList.add('state-marked');
+
+    markBtnEl.classList.toggle('active', marked);
+    markBtnEl.textContent = marked ? '已标记' : '标记';
+  }
+
+  function shouldShowQuestion(questionId) {
+    if (currentFilter === 'unanswered') return !isAnswered(questionId);
+    if (currentFilter === 'marked') return isMarked(questionId);
+    return true;
+  }
+
+  function getNavigableQuestionIds() {
+    const ids = questionEls.map((questionEl) => String(questionEl.dataset.questionId)).filter((qid) => shouldShowQuestion(qid));
+    if (ids.length) return ids;
+    return questionEls.map((questionEl) => String(questionEl.dataset.questionId));
+  }
+
+  function renderQuestionPager() {
+    const ids = getNavigableQuestionIds();
+    if (!currentQuestionId || !ids.includes(currentQuestionId)) currentQuestionId = ids[0];
+
+    questionEls.forEach((questionEl) => {
+      const qid = String(questionEl.dataset.questionId);
+      questionEl.classList.toggle('question-only-hidden', qid !== currentQuestionId);
+    });
+
+    const currentIndex = ids.indexOf(currentQuestionId);
+    currentQuestionDisplayEl.textContent = `${currentIndex + 1}/${ids.length}`;
+    prevQuestionBtn.disabled = currentIndex <= 0;
+    nextQuestionBtn.disabled = currentIndex >= ids.length - 1;
+  }
+
+  function gotoQuestion(questionId) {
+    currentQuestionId = String(questionId);
+    renderQuestionPager();
+    const block = document.getElementById(`question-${currentQuestionId}`);
+    if (block) {
+      block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function applyFilterView() {
+    answerCells.forEach((cellEl) => {
+      const qid = cellEl.dataset.questionId;
+      cellEl.classList.toggle('cell-hidden', !shouldShowQuestion(qid));
+    });
+    renderQuestionPager();
+  }
+
+  function updateSummary() {
+    let answeredCount = 0;
+    let markedCount = 0;
+
+    questionEls.forEach((questionEl) => {
+      const qid = questionEl.dataset.questionId;
+      if (isAnswered(qid)) answeredCount += 1;
+      if (isMarked(qid)) markedCount += 1;
+      updateQuestionState(qid);
+    });
+
+    answeredCountEl.textContent = String(answeredCount);
+    unansweredCountEl.textContent = String(questionEls.length - answeredCount);
+    markedCountEl.textContent = String(markedCount);
+    applyFilterView();
+  }
+
+  function collectProgressPayload() {
+    const answers = {};
+    questionEls.forEach((questionEl) => {
+      const qid = String(questionEl.dataset.questionId);
+      const values = Array.from(document.querySelectorAll(`input[name="q_${qid}"]:checked`)).map((x) => x.value);
+      answers[qid] = values.join(',');
+    });
+    return {
+      answers,
+      markedQuestionIds: Object.keys(markedMap).filter((k) => markedMap[k]).map((k) => Number(k)),
+    };
+  }
+
+  async function postProgress() {
+    if (isSubmitting) return;
+    if (saveInFlight) {
+      queuedSave = true;
+      return;
+    }
+    saveInFlight = true;
+    try {
+      await fetch(progressUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(collectProgressPayload()),
+      });
+    } catch (e) {
+      // 忽略临时网络问题，下一次操作会继续保存
+    } finally {
+      saveInFlight = false;
+      if (queuedSave) {
+        queuedSave = false;
+        postProgress();
+      }
+    }
+  }
+
+  function scheduleProgressSave(delay = 400) {
+    if (isSubmitting) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      postProgress();
+    }, delay);
+  }
+
+  function syncCheatHiddenFields() {
+    cheatViolationCountEl.value = String(cheatViolationCount);
+    cheatEventsJsonEl.value = JSON.stringify(cheatEvents);
+  }
+
+  function registerViolation(type) {
+    if (isSubmitting || forceCheatSubmitEl.value === '1') return;
+    cheatViolationCount += 1;
+    cheatEvents.push({
+      type,
+      at: new Date().toISOString(),
+    });
+    syncCheatHiddenFields();
+
+    if (cheatViolationCount >= MAX_CHEAT_VIOLATIONS) {
+      forceCheatSubmitEl.value = '1';
+      alert(`检测到第${cheatViolationCount}次违规，系统将自动交卷并按作弊处理。`);
+      formEl.submit();
+      return;
+    }
+    const remain = MAX_CHEAT_VIOLATIONS - cheatViolationCount;
+    alert(`检测到第${cheatViolationCount}次违规，请勿切换页面、复制或粘贴。再违规${remain}次将自动交卷。`);
+  }
+
+  markBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const qid = String(btn.dataset.questionId);
+      markedMap[qid] = !markedMap[qid];
+      if (!markedMap[qid]) delete markedMap[qid];
+      updateSummary();
+      scheduleProgressSave();
+    });
+  });
+
+  answerCells.forEach((cellEl) => {
+    cellEl.addEventListener('click', (e) => {
+      e.preventDefault();
+      gotoQuestion(cellEl.dataset.questionId);
+    });
+  });
+
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      currentFilter = btn.dataset.filter;
+      filterBtns.forEach((x) => x.classList.toggle('active', x === btn));
+      applyFilterView();
+    });
+  });
+
+  prevQuestionBtn.addEventListener('click', () => {
+    const ids = getNavigableQuestionIds();
+    const idx = ids.indexOf(currentQuestionId);
+    if (idx > 0) gotoQuestion(ids[idx - 1]);
+  });
+
+  nextQuestionBtn.addEventListener('click', () => {
+    const ids = getNavigableQuestionIds();
+    const idx = ids.indexOf(currentQuestionId);
+    if (idx >= 0 && idx < ids.length - 1) gotoQuestion(ids[idx + 1]);
+  });
+
+  formEl.addEventListener('change', () => {
+    updateSummary();
+    scheduleProgressSave();
+  });
+  formEl.addEventListener('submit', () => {
+    isSubmitting = true;
+    syncCheatHiddenFields();
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (isSubmitting) return;
+    if (!document.hidden) return;
+    scheduleProgressSave(0);
+    registerViolation('visibility_change');
+  });
+  document.addEventListener('copy', (e) => {
+    if (isSubmitting) return;
+    e.preventDefault();
+    scheduleProgressSave(0);
+    registerViolation('copy');
+  });
+  document.addEventListener('paste', (e) => {
+    if (isSubmitting) return;
+    e.preventDefault();
+    scheduleProgressSave(0);
+    registerViolation('paste');
+  });
+  window.addEventListener('beforeunload', () => {
+    if (isSubmitting || !navigator.sendBeacon) return;
+    const blob = new Blob([JSON.stringify(collectProgressPayload())], { type: 'application/json' });
+    navigator.sendBeacon(progressUrl, blob);
+  });
+
+  function updateTimer() {
+    const diff = end - Date.now();
+    if (diff <= 0) {
+      timerEl.textContent = '00:00';
+      formEl.submit();
+      return;
+    }
+    const s = Math.floor(diff / 1000);
+    const m = String(Math.floor(s / 60)).padStart(2, '0');
+    const sec = String(s % 60).padStart(2, '0');
+    timerEl.textContent = `${m}:${sec}`;
+  }
+
+  syncCheatHiddenFields();
+  updateSummary();
+  scheduleProgressSave(0);
+  updateTimer();
+  setInterval(updateTimer, 1000);
+</script>
+<%- include('partials/footer') %>

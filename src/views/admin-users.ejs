@@ -1,0 +1,31 @@
+﻿<%- include('partials/header', { title: '用户管理' }) %>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">用户管理</h4>
+  <div class="d-flex gap-2">
+    <a class="btn btn-primary" href="/admin/users/new">新增用户</a>
+    <a class="btn btn-outline-secondary" href="/admin/users/import">批量导入</a>
+  </div>
+</div>
+
+<form method="get" class="row g-2 mb-3">
+  <div class="col-md-4"><input class="form-control" name="q" value="<%= keyword %>" placeholder="按姓名或手机号搜索" /></div>
+  <div class="col-auto"><button class="btn btn-outline-primary" type="submit">搜索</button></div>
+</form>
+
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead><tr><th>ID</th><th>姓名</th><th>手机号</th><th>门店</th><th>部门</th><th>岗位</th><th>角色</th><th>状态</th><th>注册时间</th><th></th></tr></thead>
+    <tbody>
+      <% if (!users.length) { %><tr><td colspan="10" class="text-center text-secondary">暂无数据</td></tr><% } %>
+      <% users.forEach(u => { %>
+        <tr>
+          <td><%= u.id %></td><td><%= u.name %></td><td><%= u.phone %></td><td><%= u.storeName %></td><td><%= u.departmentName %></td><td><%= u.positionName %></td><td><%= u.roleLabel %></td>
+          <td><span class="badge <%= u.status === 'active' ? 'text-bg-success' : 'text-bg-secondary' %>"><%= u.status === 'active' ? '启用' : '禁用' %></span></td>
+          <td><%= new Date(u.createdAt).toLocaleString('zh-CN') %></td>
+          <td><a class="btn btn-sm btn-outline-primary" href="/admin/users/<%= u.id %>/edit">编辑</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('partials/footer') %>
