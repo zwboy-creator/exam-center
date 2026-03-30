@@ -14,11 +14,11 @@
       <a class="navbar-brand" href="/"><img src="/logo.png" alt="Logo" />员工手册考试平台</a>
       <div class="collapse navbar-collapse show">
         <ul class="navbar-nav me-auto">
-          <% if (currentUser && currentUser.role !== 'admin') { %>
+          <% if (currentUser && currentUser.role !== 'admin' && currentUser.role !== 'superadmin') { %>
             <li class="nav-item"><a class="nav-link" href="/dashboard">我的学习考试</a></li>
             <li class="nav-item"><a class="nav-link" href="/profile/password">修改密码</a></li>
           <% } %>
-          <% if (currentUser && currentUser.role === 'admin') { %>
+          <% if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin')) { %>
             <li class="nav-item"><a class="nav-link" href="/admin/users">用户管理</a></li>
             <li class="nav-item"><a class="nav-link" href="/admin/users/import">批量导入</a></li>
             <li class="nav-item"><a class="nav-link" href="/admin/config">基础配置</a></li>

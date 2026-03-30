@@ -564,13 +564,14 @@ app.get("/admin/users", requireAuth, requireRole(["admin"]), (req, res) => {
 });
 
 app.get("/admin/users/new", requireAuth, requireRole(["admin"]), (req, res) => {
+  const isSuperadmin = req.currentUser.role === "superadmin";
   return res.render("admin-user-form", {
     mode: "create",
     target: null,
     stores: db.stores,
     departments: db.departments,
     positions: db.positions,
-    roleOptions: ROLES,
+    roleOptions: ROLES.filter((r) => isSuperadmin || r !== "superadmin"),
     statusOptions: STATUS,
     relations: relationViewData(),
   });
@@ -585,7 +586,7 @@ app.post("/admin/users/new", requireAuth, requireRole(["admin"]), async (req, re
   if (!validChain.ok) { flash(req, validChain.message, "danger"); return res.redirect("/admin/users/new"); }
   db.users.push({
     id: db.meta.nextUserId++, name: String(name).trim(), phone: String(phone).trim(), passwordHash: await bcrypt.hash(password, 10),
-    storeId: String(storeId), departmentId: Number(departmentId), positionId: Number(positionId), role: ROLES.includes(role) ? role : "employee", status: STATUS.includes(status) ? status : "active",
+    storeId: String(storeId), departmentId: Number(departmentId), positionId: Number(positionId), role: (req.currentUser.role === "superadmin" ? ROLES : ROLES.filter((r) => r !== "superadmin")).includes(role) ? role : "employee", status: STATUS.includes(status) ? status : "active",
     loginFailures: 0, lockedUntil: null, createdAt: now(), updatedAt: now(),
   });
   save();
@@ -596,13 +597,14 @@ app.post("/admin/users/new", requireAuth, requireRole(["admin"]), async (req, re
 app.get("/admin/users/:id/edit", requireAuth, requireRole(["admin"]), (req, res) => {
   const t = db.users.find((u) => u.id === Number(req.params.id));
   if (!t) { flash(req, "用户不存在", "warning"); return res.redirect("/admin/users"); }
+  const isSuperadmin = req.currentUser.role === "superadmin";
   return res.render("admin-user-form", {
     mode: "edit",
     target: enrich(t),
     stores: db.stores,
     departments: db.departments,
     positions: db.positions,
-    roleOptions: ROLES,
+    roleOptions: ROLES.filter((r) => isSuperadmin || r !== "superadmin"),
     statusOptions: STATUS,
     relations: relationViewData(),
   });
@@ -622,7 +624,8 @@ app.post("/admin/users/:id/edit", requireAuth, requireRole(["admin"]), async (re
   t.name = String(name).trim();
   t.phone = String(phone).trim();
   t.storeId = String(storeId); t.departmentId = Number(departmentId); t.positionId = Number(positionId);
-  t.role = ROLES.includes(role) ? role : "employee"; t.status = STATUS.includes(status) ? status : "active";
+  const allowedRoles = req.currentUser.role === "superadmin" ? ROLES : ROLES.filter((r) => r !== "superadmin");
+  t.role = allowedRoles.includes(role) ? role : "employee"; t.status = STATUS.includes(status) ? status : "active";
   if (password && String(password).trim()) t.passwordHash = await bcrypt.hash(String(password).trim(), 10);
   t.updatedAt = now();
   save();
