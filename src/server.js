@@ -1010,6 +1010,64 @@ app.get("/reports/stores", requireAuth, requireRole(["manager", "admin"]), (req,
   });
 });
 
+app.get("/reports/stores/drill", requireAuth, requireRole(["manager", "admin"]), (req, res) => {
+  const type = String(req.query.type || "registered");
+  const storeId = String(req.query.storeId || "");
+  const filters = getReportFilters(req, req.currentUser);
+
+  // manager can only see own store
+  const allowedStoreId = req.currentUser.role === "manager" ? req.currentUser.storeId : storeId;
+  const store = db.stores.find((s) => s.id === allowedStoreId);
+  if (!store) { flash(req, "门店不存在或无权限", "danger"); return res.redirect("/reports/stores"); }
+
+  const positionIdFilter = filters.positionId;
+  const batchNoFilter = filters.batchNo;
+
+  const users = db.users.filter((u) => {
+    if (u.role === "admin") return false;
+    if (u.storeId !== allowedStoreId) return false;
+    if (positionIdFilter && Number(u.positionId) !== Number(positionIdFilter)) return false;
+    return true;
+  });
+
+  const userIds = new Set(users.map((u) => u.id));
+  let submitted = db.attempts.filter((a) => a.status === "submitted" && userIds.has(a.userId));
+  if (batchNoFilter) submitted = submitted.filter((a) => Number(a.attemptNo) === Number(batchNoFilter));
+
+  const latestMap = getLatestAttemptMap(submitted);
+  const participantIds = new Set(submitted.map((a) => a.userId));
+  const passIds = new Set(submitted.filter((a) => a.pass).map((a) => a.userId));
+
+  let filteredUsers = users;
+  if (type === "participant") filteredUsers = users.filter((u) => participantIds.has(u.id));
+  if (type === "pass") filteredUsers = users.filter((u) => passIds.has(u.id));
+
+  const typeLabels = { registered: "注册人员", participant: "参与人员", pass: "通过人员" };
+
+  const rows = filteredUsers.map((u) => {
+    const a = latestMap.get(u.id);
+    return {
+      name: u.name, phone: u.phone,
+      departmentName: depName(u.departmentId), positionName: posName(u.positionId),
+      attemptNo: a ? a.attemptNo : null,
+      isMakeup: a ? a.isMakeup : null,
+      totalScore: a ? a.totalScore : null,
+      pass: a ? a.pass : null,
+      submittedAt: a ? a.submittedAt : null,
+      attemptId: a ? a.id : null,
+    };
+  }).sort((a, b) => (a.name || "").localeCompare(b.name || "", "zh-CN"));
+
+  const backQuery = `?storeId=${encodeURIComponent(filters.ui.storeId)}&positionId=${encodeURIComponent(filters.ui.positionId)}&batch=${encodeURIComponent(filters.ui.batch)}`;
+
+  return res.render("store-reports-drill", {
+    storeName: store.name,
+    typeLabel: typeLabels[type] || type,
+    rows,
+    backQuery,
+  });
+});
+
 app.get("/reports/stores/export", requireAuth, requireRole(["manager", "admin"]), (req, res) => {
   const filters = getReportFilters(req, req.currentUser);
   const rows = buildStoreReportRows(req.currentUser, filters).map((x, idx) => ({

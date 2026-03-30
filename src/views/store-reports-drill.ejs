@@ -1,0 +1,34 @@
+<%- include('partials/header', { title: '名单详情' }) %>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0"><%= storeName %> — <%= typeLabel %></h5>
+  <a class="btn btn-outline-secondary btn-sm" href="/reports/stores<%= backQuery %>">返回汇总</a>
+</div>
+<div class="table-responsive">
+  <table class="table table-sm table-bordered align-middle">
+    <thead>
+      <tr><th>姓名</th><th>手机号</th><th>部门</th><th>岗位</th><th>考试批次</th><th>类型</th><th>最终得分</th><th>状态</th><th>提交时间</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% if (!rows.length) { %><tr><td colspan="10" class="text-center text-secondary">暂无数据</td></tr><% } %>
+      <% rows.forEach(r => { %>
+        <tr>
+          <td><%= r.name %></td>
+          <td><%= r.phone %></td>
+          <td><%= r.departmentName %></td>
+          <td><%= r.positionName %></td>
+          <td><%= r.attemptNo != null ? '#' + r.attemptNo : '-' %></td>
+          <td><%= r.isMakeup != null ? (r.isMakeup ? '补考' : '初考') : '-' %></td>
+          <td><%= r.totalScore != null ? r.totalScore : '-' %></td>
+          <td>
+            <% if (r.pass === true) { %><span class="badge bg-success">已通过</span>
+            <% } else if (r.pass === false) { %><span class="badge bg-danger">未通过</span>
+            <% } else { %><span class="badge bg-secondary">未参与</span><% } %>
+          </td>
+          <td><%= r.submittedAt ? new Date(r.submittedAt).toLocaleString('zh-CN') : '-' %></td>
+          <td><% if (r.attemptId != null) { %><a class="btn btn-sm btn-outline-primary" href="/exam/<%= r.attemptId %>/result">查看</a><% } %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('partials/footer') %>

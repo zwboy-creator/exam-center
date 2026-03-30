@@ -54,9 +54,9 @@
       <% rows.forEach(r => { %>
         <tr>
           <td><%= r.storeName %></td>
-          <td><%= r.registeredCount %></td>
-          <td><%= r.participantCount %></td>
-          <td><%= r.passCount %></td>
+          <td><a href="/reports/stores/drill?storeId=<%= encodeURIComponent(r.storeId) %>&type=registered&positionId=<%= encodeURIComponent(filters.positionId || 'all') %>&batch=<%= encodeURIComponent(filters.batch || 'all') %>"><%= r.registeredCount %></a></td>
+          <td><a href="/reports/stores/drill?storeId=<%= encodeURIComponent(r.storeId) %>&type=participant&positionId=<%= encodeURIComponent(filters.positionId || 'all') %>&batch=<%= encodeURIComponent(filters.batch || 'all') %>"><%= r.participantCount %></a></td>
+          <td><a href="/reports/stores/drill?storeId=<%= encodeURIComponent(r.storeId) %>&type=pass&positionId=<%= encodeURIComponent(filters.positionId || 'all') %>&batch=<%= encodeURIComponent(filters.batch || 'all') %>"><%= r.passCount %></a></td>
           <td><%= r.participationRate.toFixed(2) %>%</td>
           <td><%= r.passRate.toFixed(2) %>%</td>
           <td><%= r.averageScore.toFixed(2) %></td>
