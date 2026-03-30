@@ -562,7 +562,8 @@ app.get("/admin/users", requireAuth, requireRole(["admin"]), (req, res) => {
   const users = (q ? visible.filter((u) => u.name.includes(q) || u.phone.includes(q)) : visible)
     .map((u) => enrich(u))
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  return res.render("admin-users", { users, keyword: q });
+  const storeStats = db.stores.map((s) => ({ name: s.name, count: visible.filter((u) => u.storeId === s.id).length })).filter((s) => s.count > 0);
+  return res.render("admin-users", { users, keyword: q, storeStats });
 });
 
 app.get("/admin/users/new", requireAuth, requireRole(["admin"]), (req, res) => {

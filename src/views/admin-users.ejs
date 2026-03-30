@@ -1,4 +1,4 @@
-﻿<%- include('partials/header', { title: '用户管理' }) %>
+<%- include('partials/header', { title: '用户管理' }) %>
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h4 class="mb-0">用户管理</h4>
   <div class="d-flex gap-2">
@@ -6,6 +6,42 @@
     <a class="btn btn-outline-secondary" href="/admin/users/import">批量导入</a>
   </div>
 </div>
+
+<% if (storeStats.length) { %>
+<div class="card mb-3"><div class="card-body">
+  <h6 class="mb-3">各门店用户分布</h6>
+  <div class="d-flex align-items-center gap-4 flex-wrap">
+    <canvas id="storePie" width="180" height="180" style="flex-shrink:0"></canvas>
+    <div id="pieLegend" class="d-flex flex-wrap gap-2 small"></div>
+  </div>
+</div></div>
+<script>
+(function(){
+  const data = <%- JSON.stringify(storeStats) %>;
+  const colors = ['#0d6efd','#fd7e14','#198754','#dc3545','#6f42c1','#0dcaf0','#ffc107','#20c997','#6610f2','#d63384',
+                  '#0d6efd99','#fd7e1499','#19875499','#dc354599','#6f42c199'];
+  const canvas = document.getElementById('storePie');
+  const ctx = canvas.getContext('2d');
+  const total = data.reduce((s,d)=>s+d.count,0);
+  let angle = -Math.PI/2;
+  const cx=90,cy=90,r=80;
+  data.forEach((d,i)=>{
+    const slice = (d.count/total)*2*Math.PI;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle,angle+slice);
+    ctx.closePath(); ctx.fillStyle=colors[i%colors.length]; ctx.fill();
+    angle+=slice;
+  });
+  const legend = document.getElementById('pieLegend');
+  data.forEach((d,i)=>{
+    const item = document.createElement('div');
+    item.className='d-flex align-items-center gap-1';
+    item.innerHTML=`<span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:${colors[i%colors.length]};flex-shrink:0"></span><span>${d.name} (${d.count})</span>`;
+    legend.appendChild(item);
+  });
+})();
+</script>
+<% } %>
 
 <form method="get" class="row g-2 mb-3">
   <div class="col-md-4"><input class="form-control" name="q" value="<%= keyword %>" placeholder="按姓名或手机号搜索" /></div>
