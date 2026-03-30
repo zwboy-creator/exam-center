@@ -18,7 +18,7 @@
 
     function getAllowedDepartmentIds(storeId) {
       const all = departments.map((d) => Number(d.id));
-      if (!storeId) return [];
+      if (!storeId) return all;
       const map = relations.storeDepartmentMap || {};
       const ids = normalizeNumArray(map[String(storeId)]);
       return ids.length ? ids : all;
@@ -26,7 +26,7 @@
 
     function getAllowedPositionIds(departmentId) {
       const all = positions.map((p) => Number(p.id));
-      if (!departmentId) return [];
+      if (!departmentId) return all;
       const map = relations.departmentPositionMap || {};
       const ids = normalizeNumArray(map[String(departmentId)]);
       return ids.length ? ids : all;
