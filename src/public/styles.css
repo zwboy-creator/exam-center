@@ -266,3 +266,54 @@ pre { background: var(--apple-dark2); color: #d6ebff; border-radius: var(--radiu
   .card-body { padding: 16px 18px; }
   .auth-card .card-body { padding: 28px 22px; }
 }
+
+@media (max-width: 768px) {
+  /* 导航栏 */
+  .navbar { min-height: 48px; }
+  .navbar-brand { font-size: 0.875rem; gap: 7px; padding-right: 8px; }
+  .navbar-brand img { height: 22px; }
+  .navbar .nav-link { padding: 10px 8px !important; font-size: 0.8rem; }
+  .navbar .d-flex.align-items-center { flex-wrap: wrap; gap: 6px !important; }
+  .navbar .collapse.show { overflow-x: auto; }
+  .navbar-nav { flex-direction: row; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+  .navbar-nav::-webkit-scrollbar { display: none; }
+
+  /* 主内容 */
+  main.container { padding-top: 16px !important; padding-bottom: 24px !important; }
+  h4 { font-size: 1.1rem; }
+
+  /* 卡片 */
+  .card-body { padding: 14px 14px; }
+
+  /* 表格：强制横向滚动，文字不换行 */
+  .table-responsive { -webkit-overflow-scrolling: touch; }
+  .table { font-size: 0.8rem; min-width: 600px; }
+  .table thead th { padding: 8px 10px; font-size: 0.72rem; }
+  .table tbody td { padding: 8px 10px; }
+
+  /* 按钮 */
+  .btn { font-size: 0.82rem; padding: 6px 14px; }
+  .btn-sm { font-size: 0.75rem; padding: 4px 10px; }
+  .d-flex.gap-2 { gap: 6px !important; }
+
+  /* 表单 */
+  .form-control, .form-select { font-size: 0.875rem; }
+  .row.g-2 > [class*='col-'] { padding-left: 6px; padding-right: 6px; }
+
+  /* 顶部标题栏按钮组换行 */
+  .d-flex.justify-content-between { flex-wrap: wrap; gap: 8px; }
+
+  /* 用户管理饼图缩小 */
+  #storePie { width: 140px !important; height: 140px !important; }
+
+  /* 答题卡网格缩小 */
+  .answer-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; }
+  .answer-cell { height: 30px; font-size: 0.78rem; }
+
+  /* 认证页 */
+  .auth-card { margin-top: 24px; }
+  .auth-card .card-body { padding: 24px 16px; }
+
+  /* metric 指标块 */
+  .metric strong { font-size: 1.2rem; }
+}
