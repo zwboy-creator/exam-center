@@ -836,7 +836,7 @@ app.get("/admin/questions", requireAuth, requireRole(["admin"]), (req, res) => {
   const keyword = String(req.query.q || "").trim();
   const filterCat = String(req.query.category || "all");
   const filterType = String(req.query.questionType || "all");
-  let filtered = [...db.questions].sort((a, b) => b.id - a.id);
+  let filtered = [...db.questions].sort((a, b) => a.id - b.id);
   if (keyword) filtered = filtered.filter((q) => q.content.includes(keyword));
   if (filterCat !== "all") filtered = filtered.filter((q) => q.category === filterCat);
   if (filterType !== "all") filtered = filtered.filter((q) => q.questionType === filterType);

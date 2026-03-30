@@ -16,7 +16,7 @@
   <div class="card"><div class="card-body">
     <h6 class="mb-3">导入题库CSV</h6>
     <form method="post" action="/admin/questions/import" enctype="multipart/form-data" class="row g-2 align-items-end">
-      <div class="col-md-5"><input class="form-control" type="file" name="file" accept=".csv" required /></div>
+      <div class="col-md-5"><input class="form-control" type="file" name="file" accept=".csv,text/csv" required /></div>
       <div class="col-md-3">
         <select class="form-select" name="mode">
           <option value="replace">覆盖全部题库</option>
@@ -31,8 +31,8 @@
 
 <%/* 题库分布 + 搜索筛选 两栏 */%>
 <div class="row g-3 mb-3">
-  <div class="col-lg-5">
-    <div class="card h-100"><div class="card-body">
+  <div class="col-12">
+    <div class="card"><div class="card-body">
       <h6 class="mb-3">题库分布</h6>
       <% if (!summary.length) { %><p class="text-secondary small">暂无题目</p><% } %>
       <table class="table table-sm mb-0"><thead class="table-light"><tr><th>分类</th><th>题型</th><th>数量</th></tr></thead><tbody>
@@ -40,8 +40,8 @@
       </tbody></table>
     </div></div>
   </div>
-  <div class="col-lg-7">
-    <div class="card h-100"><div class="card-body">
+  <div class="col-12">
+    <div class="card"><div class="card-body">
       <h6 class="mb-3">搜索筛选</h6>
       <form method="get" action="/admin/questions" class="vstack gap-2">
         <input class="form-control" name="q" value="<%= filters.keyword %>" placeholder="按题目关键词搜索" />
