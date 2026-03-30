@@ -1,82 +1,102 @@
 <%- include('partials/header', { title: '题库管理' }) %>
+<% const catLabel = { management:'管理岗',service:'服务岗',technical:'技术岗',spare_parts:'配件/索赔岗',support:'职能岗',universal:'通用岗' };
+   const typeLabel = { single:'单选题', multiple:'多选题' }; %>
+
+<%/* 顶部标题栏 */%>
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h4 class="mb-0">题库管理</h4>
-  <span class="badge text-bg-primary">总题数：<%= total %></span>
-</div>
-<div class="row g-3 mb-3">
-  <div class="col-lg-6">
-    <div class="card"><div class="card-body">
-      <h6>导入题库CSV</h6>
-      <form method="post" action="/admin/questions/import" enctype="multipart/form-data" class="vstack gap-2">
-        <input class="form-control" type="file" name="file" accept=".csv" required />
-        <div>
-          <label class="form-label mb-1">导入模式</label>
-          <select class="form-select" name="mode">
-            <option value="replace">覆盖全部题库</option>
-            <option value="merge">按题目ID合并</option>
-          </select>
-        </div>
-        <div class="d-flex gap-2">
-          <button class="btn btn-primary" type="submit">导入题库</button>
-          <a class="btn btn-outline-secondary" href="/admin/questions/template">下载CSV模板</a>
-        </div>
-      </form>
-      <p class="small text-secondary mt-2 mb-0">CSV列：id,category,question_type,content,options,answer,score</p>
-    </div></div>
+  <h4 class="mb-0">题库管理 <span class="badge text-bg-primary ms-2">共 <%= total %> 题</span></h4>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-secondary btn-sm" href="/admin/questions/template">下载CSV模板</a>
+    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#importPanel">导入题库</button>
   </div>
-  <div class="col-lg-6">
-    <div class="card"><div class="card-body">
-      <h6>题库分布</h6>
-      <table class="table table-sm"><thead><tr><th>分类</th><th>题型</th><th>数量</th></tr></thead><tbody>
-        <% const catLabel = { management:'管理岗',service:'服务岗',technical:'技术岗',spare_parts:'配件/索赔岗',support:'职能岗',universal:'通用岗' };
-           const typeLabel = { single:'单选题', multiple:'多选题' }; %>
+</div>
+
+<%/* 导入面板（折叠） */%>
+<div class="collapse mb-3" id="importPanel">
+  <div class="card"><div class="card-body">
+    <h6 class="mb-3">导入题库CSV</h6>
+    <form method="post" action="/admin/questions/import" enctype="multipart/form-data" class="row g-2 align-items-end">
+      <div class="col-md-5"><input class="form-control" type="file" name="file" accept=".csv" required /></div>
+      <div class="col-md-3">
+        <select class="form-select" name="mode">
+          <option value="replace">覆盖全部题库</option>
+          <option value="merge">按题目ID合并</option>
+        </select>
+      </div>
+      <div class="col-auto"><button class="btn btn-primary" type="submit">开始导入</button></div>
+    </form>
+    <p class="small text-secondary mt-2 mb-0">CSV列：id, category, question_type, content, options, answer, score</p>
+  </div></div>
+</div>
+
+<%/* 题库分布 + 搜索筛选 两栏 */%>
+<div class="row g-3 mb-3">
+  <div class="col-lg-5">
+    <div class="card h-100"><div class="card-body">
+      <h6 class="mb-3">题库分布</h6>
+      <% if (!summary.length) { %><p class="text-secondary small">暂无题目</p><% } %>
+      <table class="table table-sm mb-0"><thead class="table-light"><tr><th>分类</th><th>题型</th><th>数量</th></tr></thead><tbody>
         <% summary.forEach(r => { %><tr><td><%= catLabel[r.category] || r.category %></td><td><%= typeLabel[r.questionType] || r.questionType %></td><td><%= r.count %></td></tr><% }) %>
       </tbody></table>
     </div></div>
   </div>
+  <div class="col-lg-7">
+    <div class="card h-100"><div class="card-body">
+      <h6 class="mb-3">搜索筛选</h6>
+      <form method="get" action="/admin/questions" class="vstack gap-2">
+        <input class="form-control" name="q" value="<%= filters.keyword %>" placeholder="按题目关键词搜索" />
+        <div class="row g-2">
+          <div class="col-6">
+            <label class="form-label small mb-1">分类</label>
+            <select class="form-select" name="category">
+              <option value="all" <%= filters.category==='all'?'selected':'' %>>全部分类</option>
+              <% categories.forEach(c => { %><option value="<%= c %>" <%= filters.category===c?'selected':'' %>><%= catLabel[c]||c %></option><% }) %>
+            </select>
+          </div>
+          <div class="col-6">
+            <label class="form-label small mb-1">题型</label>
+            <select class="form-select" name="questionType">
+              <option value="all" <%= filters.questionType==='all'?'selected':'' %>>全部题型</option>
+              <option value="single" <%= filters.questionType==='single'?'selected':'' %>>单选题</option>
+              <option value="multiple" <%= filters.questionType==='multiple'?'selected':'' %>>多选题</option>
+            </select>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" type="submit">搜索</button>
+          <a class="btn btn-outline-secondary" href="/admin/questions">重置</a>
+        </div>
+      </form>
+    </div></div>
+  </div>
 </div>
 
+<%/* 题目列表 */%>
 <div class="card"><div class="card-body">
-  <h6>题目列表</h6>
-  <form method="get" action="/admin/questions" class="row g-2 mb-3">
-    <div class="col-md-4"><input class="form-control" name="q" value="<%= filters.keyword %>" placeholder="按题目关键词搜索" /></div>
-    <div class="col-md-2">
-      <select class="form-select" name="category">
-        <option value="all" <%= filters.category === 'all' ? 'selected' : '' %>>全部分类</option>
-        <% categories.forEach(c => { %><option value="<%= c %>" <%= filters.category === c ? 'selected' : '' %>><%= catLabel[c] || c %></option><% }) %>
-      </select>
-    </div>
-    <div class="col-md-2">
-      <select class="form-select" name="questionType">
-        <option value="all" <%= filters.questionType === 'all' ? 'selected' : '' %>>全部题型</option>
-        <option value="single" <%= filters.questionType === 'single' ? 'selected' : '' %>>单选题</option>
-        <option value="multiple" <%= filters.questionType === 'multiple' ? 'selected' : '' %>>多选题</option>
-      </select>
-    </div>
-    <div class="col-auto d-flex gap-2">
-      <button class="btn btn-primary" type="submit">搜索</button>
-      <a class="btn btn-outline-secondary" href="/admin/questions">重置</a>
-    </div>
-  </form>
+  <h6 class="mb-3">题目列表 <span class="text-secondary small fw-normal">（最多显示50条，可通过搜索筛选）</span></h6>
   <div class="table-responsive">
-    <table class="table table-sm align-middle"><thead><tr><th>ID</th><th>分类</th><th>题型</th><th>题目</th><th>答案</th><th>分值</th><th></th></tr></thead><tbody>
-      <% if (!questions.length) { %><tr><td colspan="7" class="text-center text-secondary">暂无数据</td></tr><% } %>
-      <% questions.forEach(q => { %>
-        <tr>
-          <td><%= q.id %></td>
-          <td><%= catLabel[q.category] || q.category %></td>
-          <td><%= typeLabel[q.questionType] || q.questionType %></td>
-          <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="<%= q.content %>"><%= q.content %></td>
-          <td><%= q.answer %></td>
-          <td><%= q.score %></td>
-          <td class="d-flex gap-1">
-            <a class="btn btn-sm btn-outline-primary" href="/admin/questions/<%= q.id %>/edit">编辑</a>
-            <form method="post" action="/admin/questions/<%= q.id %>/delete" onsubmit="return confirm('确认删除题目 ID=<%= q.id %>？')"><button class="btn btn-sm btn-outline-danger" type="submit">删除</button></form>
-          </td>
-        </tr>
-      <% }) %>
-    </tbody></table>
+    <table class="table table-sm align-middle">
+      <thead class="table-light"><tr><th>ID</th><th>分类</th><th>题型</th><th>题目</th><th>答案</th><th>分值</th><th></th></tr></thead>
+      <tbody>
+        <% if (!questions.length) { %><tr><td colspan="7" class="text-center text-secondary py-3">暂无数据</td></tr><% } %>
+        <% questions.forEach(q => { %>
+          <tr>
+            <td class="text-secondary small"><%= q.id %></td>
+            <td><span class="badge text-bg-light text-dark border"><%= catLabel[q.category]||q.category %></span></td>
+            <td><span class="badge <%= q.questionType==='single'?'text-bg-info':'text-bg-warning' %>"><%= typeLabel[q.questionType]||q.questionType %></span></td>
+            <td style="max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="<%= q.content %>"><%= q.content %></td>
+            <td><code><%= q.answer %></code></td>
+            <td><%= q.score %></td>
+            <td>
+              <div class="d-flex gap-1">
+                <a class="btn btn-sm btn-outline-primary" href="/admin/questions/<%= q.id %>/edit">编辑</a>
+                <form method="post" action="/admin/questions/<%= q.id %>/delete" onsubmit="return confirm('确认删除题目 ID=<%= q.id %>？')"><button class="btn btn-sm btn-outline-danger" type="submit">删除</button></form>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
   </div>
-  <p class="small text-secondary mb-0">最多显示50条，可通过搜索筛选</p>
 </div></div>
 <%- include('partials/footer') %>
