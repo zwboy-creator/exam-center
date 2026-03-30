@@ -816,6 +816,13 @@ app.post("/admin/config/department-position-link", requireAuth, requireRole(["ad
   return res.redirect("/admin/config");
 });
 
+app.get("/admin/questions/template", requireAuth, requireRole(["admin"]), (req, res) => {
+  const csv = "id,category,question_type,content,options,answer,score\n1,universal,single,示例单选题，以下哪项正确？,[\"选项A\",\"选项B\",\"选项C\",\"选项D\"],A,2\n2,universal,multiple,示例多选题，以下哪些正确？,[\"选项A\",\"选项B\",\"选项C\",\"选项D\"],\"A,B\",4\n";
+  res.setHeader("Content-Type", "text/csv; charset=utf-8");
+  res.setHeader("Content-Disposition", 'attachment; filename="questions_template.csv"');
+  return res.send("\uFEFF" + csv);
+});
+
 app.get("/admin/questions", requireAuth, requireRole(["admin"]), (req, res) => {
   const map = new Map();
   for (const q of db.questions) {
@@ -826,8 +833,44 @@ app.get("/admin/questions", requireAuth, requireRole(["admin"]), (req, res) => {
     const [category, questionType] = k.split("__");
     return { category, questionType, count };
   });
-  const latestQuestions = [...db.questions].sort((a, b) => b.id - a.id).slice(0, 30);
-  return res.render("admin-questions", { total: db.questions.length, summary, latestQuestions });
+  const keyword = String(req.query.q || "").trim();
+  const filterCat = String(req.query.category || "all");
+  const filterType = String(req.query.questionType || "all");
+  let filtered = [...db.questions].sort((a, b) => b.id - a.id);
+  if (keyword) filtered = filtered.filter((q) => q.content.includes(keyword));
+  if (filterCat !== "all") filtered = filtered.filter((q) => q.category === filterCat);
+  if (filterType !== "all") filtered = filtered.filter((q) => q.questionType === filterType);
+  const categories = [...new Set(db.questions.map((q) => q.category))];
+  return res.render("admin-questions", { total: db.questions.length, summary, questions: filtered.slice(0, 50), filters: { keyword, category: filterCat, questionType: filterType }, categories });
+});
+
+app.get("/admin/questions/:id/edit", requireAuth, requireRole(["admin"]), (req, res) => {
+  const q = db.questions.find((x) => x.id === Number(req.params.id));
+  if (!q) { flash(req, "题目不存在", "warning"); return res.redirect("/admin/questions"); }
+  return res.render("admin-question-edit", { q });
+});
+
+app.post("/admin/questions/:id/edit", requireAuth, requireRole(["admin"]), (req, res) => {
+  const q = db.questions.find((x) => x.id === Number(req.params.id));
+  if (!q) { flash(req, "题目不存在", "warning"); return res.redirect("/admin/questions"); }
+  q.category = String(req.body.category || "").trim();
+  q.questionType = String(req.body.questionType || "").trim();
+  q.content = String(req.body.content || "").trim();
+  q.options = parseArray(req.body.options);
+  q.answer = String(req.body.answer || "").trim();
+  q.score = Number(req.body.score) || 0;
+  save();
+  flash(req, "题目已更新", "success");
+  return res.redirect("/admin/questions");
+});
+
+app.post("/admin/questions/:id/delete", requireAuth, requireRole(["admin"]), (req, res) => {
+  const idx = db.questions.findIndex((x) => x.id === Number(req.params.id));
+  if (idx === -1) { flash(req, "题目不存在", "warning"); return res.redirect("/admin/questions"); }
+  db.questions.splice(idx, 1);
+  save();
+  flash(req, "题目已删除", "success");
+  return res.redirect("/admin/questions");
 });
 
 app.post("/admin/questions/import", requireAuth, requireRole(["admin"]), upload.single("file"), (req, res) => {
