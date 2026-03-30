@@ -628,6 +628,17 @@ app.post("/admin/users/:id/edit", requireAuth, requireRole(["admin"]), async (re
   return res.redirect("/admin/users");
 });
 
+app.post("/admin/users/:id/delete", requireAuth, requireRole(["admin"]), (req, res) => {
+  const id = Number(req.params.id);
+  if (id === req.currentUser.id) { flash(req, "不能删除当前登录的管理员", "danger"); return res.redirect("/admin/users"); }
+  const idx = db.users.findIndex((u) => u.id === id);
+  if (idx === -1) { flash(req, "用户不存在", "warning"); return res.redirect("/admin/users"); }
+  db.users.splice(idx, 1);
+  save();
+  flash(req, "用户已删除", "success");
+  return res.redirect("/admin/users");
+});
+
 app.get("/admin/users/import", requireAuth, requireRole(["admin"]), (req, res) => {
   const result = req.session.importResult || null;
   delete req.session.importResult;
