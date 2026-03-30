@@ -15,6 +15,7 @@
         <ul class="navbar-nav me-auto">
           <% if (currentUser && currentUser.role !== 'admin') { %>
             <li class="nav-item"><a class="nav-link" href="/dashboard">我的学习考试</a></li>
+            <li class="nav-item"><a class="nav-link" href="/profile/password">修改密码</a></li>
           <% } %>
           <% if (currentUser && currentUser.role === 'admin') { %>
             <li class="nav-item"><a class="nav-link" href="/admin/users">用户管理</a></li>

@@ -442,6 +442,23 @@ app.post("/login", async (req, res) => {
 
 app.post("/logout", (req, res) => req.session.destroy(() => res.redirect("/login")));
 
+app.get("/profile/password", requireAuth, (req, res) => res.render("change-password"));
+
+app.post("/profile/password", requireAuth, async (req, res) => {
+  const { oldPassword, newPassword, newPasswordConfirm } = req.body;
+  if (!oldPassword || !newPassword || !newPasswordConfirm) { flash(req, "请完整填写所有字段", "danger"); return res.redirect("/profile/password"); }
+  if (newPassword !== newPasswordConfirm) { flash(req, "两次新密码不一致", "danger"); return res.redirect("/profile/password"); }
+  if (newPassword.length < 6) { flash(req, "新密码至少6位", "danger"); return res.redirect("/profile/password"); }
+  const u = db.users.find((x) => x.id === req.currentUser.id);
+  const ok = await bcrypt.compare(oldPassword, u.passwordHash);
+  if (!ok) { flash(req, "当前密码错误", "danger"); return res.redirect("/profile/password"); }
+  u.passwordHash = await bcrypt.hash(newPassword, 10);
+  u.updatedAt = now();
+  save();
+  flash(req, "密码修改成功", "success");
+  return res.redirect("/dashboard");
+});
+
 app.get("/dashboard", requireAuth, (req, res) => {
   if (req.currentUser.role === "admin") return res.redirect("/admin/users");
   const attempts = userAttempts(req.currentUser.id);
