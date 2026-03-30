@@ -36,16 +36,28 @@
       <h6 class="mb-3">题库分布</h6>
       <% if (!summary.length) { %><p class="text-secondary small">暂无题目</p><% } %>
       <% const chartData = {};
-         summary.forEach(r => { const k = catLabel[r.category]||r.category; chartData[k] = (chartData[k]||0) + r.count; });
-         const maxCount = Math.max(...Object.values(chartData), 1); %>
-      <div class="vstack gap-1">
-        <% Object.entries(chartData).forEach(([label, count]) => { %>
-          <div class="d-flex align-items-center gap-2 small">
+         summary.forEach(r => {
+           const k = catLabel[r.category]||r.category;
+           if (!chartData[k]) chartData[k] = { single: 0, multiple: 0 };
+           chartData[k][r.questionType] = (chartData[k][r.questionType]||0) + r.count;
+         });
+         const maxCount = Math.max(...Object.values(chartData).map(v => v.single+v.multiple), 1); %>
+      <div class="vstack gap-2 small">
+        <div class="d-flex gap-3 mb-1">
+          <span><span style="display:inline-block;width:12px;height:12px;background:#0d6efd;border-radius:2px"></span> 单选题</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:#fd7e14;border-radius:2px"></span> 多选题</span>
+        </div>
+        <% Object.entries(chartData).forEach(([label, counts]) => {
+             const total = counts.single + counts.multiple;
+             const singlePct = Math.round(counts.single/maxCount*100);
+             const multiPct = Math.round(counts.multiple/maxCount*100); %>
+          <div class="d-flex align-items-center gap-2">
             <div style="width:90px;flex-shrink:0" class="text-end text-secondary"><%= label %></div>
-            <div class="flex-grow-1 bg-light rounded" style="height:18px">
-              <div class="rounded" style="width:<%= Math.round(count/maxCount*100) %>%;height:18px;background:#0d6efd"></div>
+            <div class="flex-grow-1 bg-light rounded overflow-hidden" style="height:18px;display:flex">
+              <div style="width:<%= singlePct %>%;height:18px;background:#0d6efd" title="单选题：<%= counts.single %>"></div>
+              <div style="width:<%= multiPct %>%;height:18px;background:#fd7e14" title="多选题：<%= counts.multiple %>"></div>
             </div>
-            <div style="width:30px;flex-shrink:0" class="text-secondary"><%= count %></div>
+            <div style="width:80px;flex-shrink:0" class="text-secondary"><%= total %>（<span style="color:#0d6efd"><%= counts.single %></span>/<span style="color:#fd7e14"><%= counts.multiple %></span>）</div>
           </div>
         <% }) %>
       </div>
