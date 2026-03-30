@@ -641,12 +641,17 @@ app.post("/admin/users/import", requireAuth, requireRole(["admin"]), upload.sing
     const s = db.stores.find((x) => x.id === storeRaw || x.name === storeRaw);
     const d = db.departments.find((x) => String(x.id) === depRaw || x.name === depRaw);
     const p = db.positions.find((x) => String(x.id) === posRaw || x.name === posRaw);
-    const relationValid = s && d && p ? validateStoreDepartmentPosition(s.id, d.id, p.id) : { ok: false };
-    if (!name || !phone || !s || !d || !p || !PHONE_RE.test(phone) || !relationValid.ok) {
+    const rowErrors = [];
+    if (!name) rowErrors.push("姓名为空");
+    if (!phone) rowErrors.push("手机号为空");
+    if (phone && !PHONE_RE.test(phone)) rowErrors.push(`手机号格式错误(${phone})`);
+    if (!storeRaw) rowErrors.push("门店为空"); else if (!s) rowErrors.push(`门店"${storeRaw}"不存在`);
+    if (!depRaw) rowErrors.push("部门为空"); else if (!d) rowErrors.push(`部门"${depRaw}"不存在`);
+    if (!posRaw) rowErrors.push("岗位为空"); else if (!p) rowErrors.push(`岗位"${posRaw}"不存在`);
+    if (rowErrors.length > 0) {
       result.failed += 1;
       if (result.errors.length < 20) {
-        const reason = relationValid.ok ? "请检查姓名/手机号/门店/部门/岗位" : (relationValid.message || "请检查姓名/手机号/门店/部门/岗位");
-        result.errors.push(`第${line}行导入失败，${reason}`);
+        result.errors.push(`第${line}行导入失败：${rowErrors.join("；")}`);
       }
       continue;
     }
