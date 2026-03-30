@@ -557,7 +557,9 @@ app.get("/exam/:id/result", requireAuth, requireRole(["employee", "manager", "ad
 });
 app.get("/admin/users", requireAuth, requireRole(["admin"]), (req, res) => {
   const q = String(req.query.q || "").trim();
-  const users = (q ? db.users.filter((u) => u.name.includes(q) || u.phone.includes(q)) : db.users)
+  const isSuperadmin = req.currentUser.role === "superadmin";
+  const visible = isSuperadmin ? db.users : db.users.filter((u) => u.role !== "superadmin");
+  const users = (q ? visible.filter((u) => u.name.includes(q) || u.phone.includes(q)) : visible)
     .map((u) => enrich(u))
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   return res.render("admin-users", { users, keyword: q });
@@ -597,6 +599,7 @@ app.post("/admin/users/new", requireAuth, requireRole(["admin"]), async (req, re
 app.get("/admin/users/:id/edit", requireAuth, requireRole(["admin"]), (req, res) => {
   const t = db.users.find((u) => u.id === Number(req.params.id));
   if (!t) { flash(req, "用户不存在", "warning"); return res.redirect("/admin/users"); }
+  if (t.role === "superadmin" && req.currentUser.role !== "superadmin") { flash(req, "无权限修改超级管理员", "danger"); return res.redirect("/admin/users"); }
   const isSuperadmin = req.currentUser.role === "superadmin";
   return res.render("admin-user-form", {
     mode: "edit",
@@ -614,6 +617,7 @@ app.post("/admin/users/:id/edit", requireAuth, requireRole(["admin"]), async (re
   const id = Number(req.params.id);
   const t = db.users.find((u) => u.id === id);
   if (!t) { flash(req, "用户不存在", "warning"); return res.redirect("/admin/users"); }
+  if (t.role === "superadmin" && req.currentUser.role !== "superadmin") { flash(req, "无权限修改超级管理员", "danger"); return res.redirect("/admin/users"); }
   const { name, phone, password, storeId, departmentId, positionId, role, status } = req.body;
   if (!name || !phone) { flash(req, "姓名和手机号不能为空", "danger"); return res.redirect(`/admin/users/${id}/edit`); }
   if (!PHONE_RE.test(phone)) { flash(req, "手机号格式错误", "danger"); return res.redirect(`/admin/users/${id}/edit`); }
