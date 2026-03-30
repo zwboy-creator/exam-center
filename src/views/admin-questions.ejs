@@ -25,7 +25,9 @@
     <div class="card"><div class="card-body">
       <h6>题库分布</h6>
       <table class="table table-sm"><thead><tr><th>分类</th><th>题型</th><th>数量</th></tr></thead><tbody>
-        <% summary.forEach(r => { %><tr><td><%= r.category %></td><td><%= r.questionType %></td><td><%= r.count %></td></tr><% }) %>
+        <% const catLabel = { management:'管理岗',service:'服务岗',technical:'技术岗',spare_parts:'配件/索赔岗',support:'职能岗',universal:'通用岗' };
+           const typeLabel = { single:'单选题', multiple:'多选题' }; %>
+        <% summary.forEach(r => { %><tr><td><%= catLabel[r.category] || r.category %></td><td><%= typeLabel[r.questionType] || r.questionType %></td><td><%= r.count %></td></tr><% }) %>
       </tbody></table>
     </div></div>
   </div>
@@ -34,7 +36,7 @@
   <h6>最近30题</h6>
   <div class="table-responsive">
     <table class="table table-sm align-middle"><thead><tr><th>ID</th><th>分类</th><th>题型</th><th>题目</th><th>答案</th><th>分值</th></tr></thead><tbody>
-      <% latestQuestions.forEach(q => { %><tr><td><%= q.id %></td><td><%= q.category %></td><td><%= q.questionType %></td><td><%= q.content %></td><td><%= q.answer %></td><td><%= q.score %></td></tr><% }) %>
+      <% latestQuestions.forEach(q => { %><tr><td><%= q.id %></td><td><%= catLabel[q.category] || q.category %></td><td><%= typeLabel[q.questionType] || q.questionType %></td><td><%= q.content %></td><td><%= q.answer %></td><td><%= q.score %></td></tr><% }) %>
     </tbody></table>
   </div>
 </div></div>
