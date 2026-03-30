@@ -35,9 +35,20 @@
     <div class="card"><div class="card-body">
       <h6 class="mb-3">题库分布</h6>
       <% if (!summary.length) { %><p class="text-secondary small">暂无题目</p><% } %>
-      <table class="table table-sm mb-0"><thead class="table-light"><tr><th>分类</th><th>题型</th><th>数量</th></tr></thead><tbody>
-        <% summary.forEach(r => { %><tr><td><%= catLabel[r.category] || r.category %></td><td><%= typeLabel[r.questionType] || r.questionType %></td><td><%= r.count %></td></tr><% }) %>
-      </tbody></table>
+      <% const chartData = {};
+         summary.forEach(r => { const k = catLabel[r.category]||r.category; chartData[k] = (chartData[k]||0) + r.count; });
+         const maxCount = Math.max(...Object.values(chartData), 1); %>
+      <div class="vstack gap-1">
+        <% Object.entries(chartData).forEach(([label, count]) => { %>
+          <div class="d-flex align-items-center gap-2 small">
+            <div style="width:90px;flex-shrink:0" class="text-end text-secondary"><%= label %></div>
+            <div class="flex-grow-1 bg-light rounded" style="height:18px">
+              <div class="rounded" style="width:<%= Math.round(count/maxCount*100) %>%;height:18px;background:#0d6efd"></div>
+            </div>
+            <div style="width:30px;flex-shrink:0" class="text-secondary"><%= count %></div>
+          </div>
+        <% }) %>
+      </div>
     </div></div>
   </div>
   <div class="col-12">

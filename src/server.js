@@ -19,10 +19,10 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 const PORT = Number(process.env.PORT || 8080);
 const PHONE_RE = /^1\d{10}$/;
-const ROLES = ["employee", "manager", "admin"];
+const ROLES = ["employee", "manager", "admin", "superadmin"];
 const STATUS = ["active", "disabled"];
 const CATS = ["management", "service", "technical", "spare_parts", "support", "universal"];
-const ROLE_LABEL = { employee: "员工", manager: "店长/主管", admin: "系统管理员" };
+const ROLE_LABEL = { employee: "员工", manager: "店长/主管", admin: "系统管理员", superadmin: "超级管理员" };
 const CAT_LABEL = {
   management: "管理岗",
   service: "服务岗",
@@ -185,7 +185,7 @@ function storeName(id) { const x = findStore(id); return x ? x.name : "-"; }
 function depName(id) { const x = findDep(id); return x ? x.name : "-"; }
 function posName(id) { const x = findPos(id); return x ? x.name : "-"; }
 function posCat(id) { const x = findPos(id); return x ? x.category : "universal"; }
-function hasAdmin() { return db.users.some((u) => u.role === "admin" && u.status === "active"); }
+function hasAdmin() { return db.users.some((u) => (u.role === "admin" || u.role === "superadmin") && u.status === "active"); }
 function flash(req, msg, type = "info") { req.session.flash = { msg, type }; }
 function norm(ans) {
   return String(ans || "").split(",").map((s) => s.trim().toUpperCase()).filter(Boolean).sort().join(",");
@@ -251,7 +251,9 @@ function requireAuth(req, res, next) {
 }
 function requireRole(roles) {
   return (req, res, next) => {
-    if (!req.currentUser || !roles.includes(req.currentUser.role)) {
+    const role = req.currentUser && req.currentUser.role;
+    const effective = role === "superadmin" ? [...roles.includes("admin") ? roles : [], "superadmin"] : roles;
+    if (!role || !effective.includes(role)) {
       flash(req, "无权限访问。", "danger");
       return res.redirect("/dashboard");
     }
@@ -379,7 +381,7 @@ app.post("/setup", async (req, res) => {
   db.users.push({
     id: db.meta.nextUserId++, name: String(name).trim(), phone: String(phone).trim(), passwordHash: await bcrypt.hash(password, 10),
     storeId: String(storeId), departmentId: Number(departmentId), positionId: Number(positionId),
-    role: "admin", status: "active", loginFailures: 0, lockedUntil: null, createdAt: now(), updatedAt: now(),
+    role: "superadmin", status: "active", loginFailures: 0, lockedUntil: null, createdAt: now(), updatedAt: now(),
   });
   save();
   flash(req, "管理员已创建，请登录", "success");
@@ -436,7 +438,7 @@ app.post("/login", async (req, res) => {
   u.updatedAt = now();
   req.session.userId = u.id;
   save();
-  if (u.role === "admin") return res.redirect("/admin/users");
+  if (u.role === "admin" || u.role === "superadmin") return res.redirect("/admin/users");
   return res.redirect("/dashboard");
 });
 
@@ -550,7 +552,7 @@ app.post("/exam/:id/submit", requireAuth, requireRole(["employee", "manager"]), 
 app.get("/exam/:id/result", requireAuth, requireRole(["employee", "manager", "admin"]), (req, res) => {
   const a = db.attempts.find((x) => x.id === Number(req.params.id));
   if (!a) { flash(req, "考试不存在", "warning"); return res.redirect("/dashboard"); }
-  if (req.currentUser.role !== "admin" && a.userId !== req.currentUser.id) { flash(req, "无权限查看", "danger"); return res.redirect("/dashboard"); }
+  if (req.currentUser.role !== "admin" && req.currentUser.role !== "superadmin" && a.userId !== req.currentUser.id) { flash(req, "无权限查看", "danger"); return res.redirect("/dashboard"); }
   return res.render("result", { attempt: a, wrongCount: a.questions.filter((q) => !q.isCorrect).length, passScore: a.passScore });
 });
 app.get("/admin/users", requireAuth, requireRole(["admin"]), (req, res) => {
@@ -628,7 +630,7 @@ app.post("/admin/users/:id/edit", requireAuth, requireRole(["admin"]), async (re
   return res.redirect("/admin/users");
 });
 
-app.post("/admin/users/:id/delete", requireAuth, requireRole(["admin"]), (req, res) => {
+app.post("/admin/users/:id/delete", requireAuth, requireRole(["superadmin"]), (req, res) => {
   const id = Number(req.params.id);
   if (id === req.currentUser.id) { flash(req, "不能删除当前登录的管理员", "danger"); return res.redirect("/admin/users"); }
   const idx = db.users.findIndex((u) => u.id === id);
@@ -944,7 +946,7 @@ function getReportFilters(req, viewer) {
 
 function getFilteredUsersForReport(viewer, filters) {
   return db.users.filter((u) => {
-    if (u.role === "admin") return false;
+    if (u.role === "admin" || u.role === "superadmin") return false;
     if (viewer.role === "manager" && u.storeId !== viewer.storeId) return false;
     if (filters.storeId && u.storeId !== filters.storeId) return false;
     if (filters.positionId && Number(u.positionId) !== Number(filters.positionId)) return false;
@@ -1067,7 +1069,7 @@ app.get("/reports/stores/drill", requireAuth, requireRole(["manager", "admin"]),
   const batchNoFilter = filters.batchNo;
 
   const users = db.users.filter((u) => {
-    if (u.role === "admin") return false;
+    if (u.role === "admin" || u.role === "superadmin") return false;
     if (u.storeId !== allowedStoreId) return false;
     if (positionIdFilter && Number(u.positionId) !== Number(positionIdFilter)) return false;
     return true;
